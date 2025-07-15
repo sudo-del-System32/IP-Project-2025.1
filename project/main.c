@@ -14,9 +14,19 @@ int main()
 {
 	//UF
 	int uf_size = file_size("uf1.bin", sizeof(uf));
-	if(uf_size<0) uf_size = 1;
-	uf *uf_array = malloc(sizeof(uf)*(uf_size));
+	uf *uf_array = (uf *)malloc(uf_size * sizeof(uf));
 	uf_file_to_array(uf_array, &uf_size);
+
+
+	//uf_create(&uf_array, &uf_size);
+	//uf_create(&uf_array, &uf_size);
+	//uf_create(&uf_array, &uf_size);
+
+
+	uf_array_to_file(uf_array, &uf_size);
+	uf_read(uf_array, 0);
+	uf_read(uf_array, 1);
+	uf_read(uf_array, 2);
 
 	//menu_start();
 

@@ -53,4 +53,11 @@ void input_char(char *p ,const int _size , const char var_name[] ,const char var
 bool verify_input(char str[], const int _size);
 
 
+
+/*
+ ** Uma funçao para parar a dor de cabeça de mudança de fflush pra fpurge dependendo de seu sistema operacional =)
+ */
+void clean(FILE *_File);
+
+
 #endif //FUNC_GERAIS_H

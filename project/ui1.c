@@ -23,7 +23,7 @@ void input_menu_checker()
     }
 
     //fpurge(stdin); //codigo não compila com esta função
-    fflush(stdin);
+    clean(stdin);
     scanf("%s", input_menu.str);
 
     input_menu.integer = atoi(input_menu.str);

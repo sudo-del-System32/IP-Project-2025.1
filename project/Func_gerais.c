@@ -6,8 +6,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "uf1.h"
+//#include "uf1.h"
 
+//SE SISTEMA UNIX, MacOS ou Linux, PORFAVOR RETIRAR OS // ABAIXO E ATIVAR A DEFINIÇAO
+//#define unix
 
 FILE *ptr_file(const char path[])
 {
@@ -30,10 +32,8 @@ int file_size(const char path[],const int _sizeof_typedata)
     FILE *f = ptr_file(path);
     fseek (f, 0, SEEK_END);
 
-    _size = ftell(f) / sizeof(_sizeof_typedata);
-    printf("%d\n",_size);
-    printf("%d\n",ftell(f));
-    printf("%d\n",_sizeof_typedata);
+    _size = ftell(f) / _sizeof_typedata;
+
     fclose(f);
     return _size;
 }
@@ -42,32 +42,33 @@ int file_size(const char path[],const int _sizeof_typedata)
 
 void input_int(int *p ,const int _size ,const char var_name[] ,const char var_type[])
 {
-    //_size = n* de digitos
+    //_size = n* de digitos que o numero podera ter
     bool flag;
     char str[_size];
 
     do{
 
         for (int i = 0; i < _size; i++)
-            str[i] = '\0';
+            str[i] ='\0';
 
         printf ("Digite o %s do %s: ", var_name, var_type);
-        fgets (str, _size, stdin);
+        clean(stdin);
+        gets (str);
 
         flag = verify_input(str , _size);
-
 
         //Verificação especifica do codigo
         if (flag == TRUE)
 
             for (int i = 0; i < _size; i++)
             {
-                if ( str[i] != '\0' && ( str[i] < '0' || '9' < str[i] ) )
+                if (str[i] != '\0' && (str[i] < '0' || '9' < str[i]))
                 {
-                    printf ("ERRO: Campo nao foi preenchido somente com numeros existindo espaços, letras ou simbolos\n\n");
+                    printf ("ERRO: Campo nao foi preenchido somente com numeros existindo espassos, letras ou simbolos\n\n");
                     flag = FALSE;
                     break;
                 }
+                //if (str[i] != '\n') str[i] = '\0';
 
             }
 
@@ -77,7 +78,6 @@ void input_int(int *p ,const int _size ,const char var_name[] ,const char var_ty
     //Conversão em int
 
     *p = atoi(str);
-
 }
 
 
@@ -93,7 +93,9 @@ void input_char(char *p ,const int _size , const char var_name[] ,const char var
             p[i] = '\0';
 
         printf ("Digite o %s do %s: ", var_name, var_type);
-        fgets (p, _size, stdin);
+        clean(stdin);
+        gets (p);
+        //fgets (p, _size, stdin);
 
         flag = verify_input(p , _size);
 
@@ -125,9 +127,21 @@ bool verify_input(char str[], const int _size)
     return TRUE;
 }
 
+//função destinada a manter todos os sistemas acessiveis
+
+void clean(FILE *_File)
+{
+    #ifdef unix
+        fpurge(_File);
+    #else
+        fflush(_File);
+    #endif
+}
+
 
 //Func_gerais.h
-
+//mudar pasta
+/*
 void free_all(uf *uf_array, FILE *f1, FILE *f2, FILE *f3, FILE *f4)
 {
     free(uf_array);
@@ -141,7 +155,7 @@ void free_all(uf *uf_array, FILE *f1, FILE *f2, FILE *f3, FILE *f4)
 }
 
 
-/*
+
 void uf_file_to_array(uf *uf_array, const int *uf_size)
 {
 
@@ -162,7 +176,7 @@ void uf_array_to_file(uf *uf_array, const int *uf_size)
         {
             fseek(f,sizeof(uf)*i,SEEK_SET);
             fwrite(&uf_array[i],sizeof(uf),1,f);
-            fflush(f);
+            clean(f);
         }
     }
     fclose(f);
