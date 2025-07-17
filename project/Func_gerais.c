@@ -8,8 +8,6 @@
 
 //#include "uf1.h"
 
-//SE SISTEMA UNIX, MacOS ou Linux, PORFAVOR RETIRAR OS // ABAIXO E ATIVAR A DEFINIÇAO
-//#define unix
 
 FILE *ptr_file(const char path[])
 {
@@ -51,7 +49,7 @@ void input_int(int *p ,const int _size ,const char var_name[] ,const char var_ty
         for (int i = 0; i < _size; i++)
             str[i] ='\0';
 
-        printf ("Digite o %s do %s: ", var_name, var_type);
+        printf ("\nDigite o %s do %s: ", var_name, var_type);
         clean(stdin);
         gets (str);
 
@@ -92,7 +90,7 @@ void input_char(char *p ,const int _size , const char var_name[] ,const char var
         for (int i = 0; i < _size; i++)
             p[i] = '\0';
 
-        printf ("Digite o %s do %s: ", var_name, var_type);
+        printf ("\nDigite o %s do %s: ", var_name, var_type);
         clean(stdin);
         gets (p);
         //fgets (p, _size, stdin);
@@ -102,7 +100,7 @@ void input_char(char *p ,const int _size , const char var_name[] ,const char var
 
     } while (flag == FALSE);
 
-
+    strupr(p);
 }
 
 
@@ -139,46 +137,3 @@ void clean(FILE *_File)
 }
 
 
-//Func_gerais.h
-//mudar pasta
-/*
-void free_all(uf *uf_array, FILE *f1, FILE *f2, FILE *f3, FILE *f4)
-{
-    free(uf_array);
-    //free();
-    //free();
-    //free();
-    fclose(f1);
-    fclose(f2);
-    fclose(f3);
-    fclose(f4);
-}
-
-
-
-void uf_file_to_array(uf *uf_array, const int *uf_size)
-{
-
-    FILE *f = ptr_file("uf1.bin");
-    fread(uf_array,sizeof(uf),*uf_size,f);
-    uf_array_fuller(uf_array ,uf_size);
-    fclose(f);
-}
-
-
-
-void uf_array_to_file(uf *uf_array, const int *uf_size)
-{
-    FILE *f = ptr_file("uf1.bin");
-    for (int i = 0; i < *uf_size; i++)
-    {
-        if (uf_array[i].status == -1)
-        {
-            fseek(f,sizeof(uf)*i,SEEK_SET);
-            fwrite(&uf_array[i],sizeof(uf),1,f);
-            clean(f);
-        }
-    }
-    fclose(f);
-}
-*/

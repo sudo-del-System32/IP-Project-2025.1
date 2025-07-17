@@ -21,7 +21,7 @@ typedef enum menu_options
     Delete_Data = 50,
     Exit_options = 60
 
-}var_options;
+   }var_options;
 
 typedef enum types
 {
@@ -46,23 +46,28 @@ typedef enum types
 void input_menu_checker();
 
 
-bool front_to_backend();
+bool front_to_backend(uf **uf_array, int *uf_size);
 
 
 
 /*
  ** Utilizado para escolha das opções do menu de inicio.
  */
-void menu_start();
+void menu_start(uf **uf_array, int *uf_size);
 
 /*
  ** Utilizado para o output das opções do menu de inicio.
  */
 void ui_start();
 
-
+/*
+ ** Utilizado para escolher o tipo de processo que sera feito.
+ */
 var_options menu_process();
 
+/*
+ ** UI do menu process.
+ */
 void ui_process();
 
 /*
@@ -76,9 +81,8 @@ void menu_vote();
 void ui_vote();
 
 /*
- ** Utilizado para escolha das opções do menu de criar dados.
+ ** Utilizado para escolha das opções do menu de tipos dados.
  */
-bool menu_create_data();
 var_types menu_data_types(const var_options *ptr_option);
 
 /*
@@ -86,7 +90,26 @@ var_types menu_data_types(const var_options *ptr_option);
  */
 void ui_data_types(char str[]);
 
+/*
+ ** Function for chosing the string for the ui_data_types. Qual comentario
+ */
 void ui_string_choice(char str[] ,const var_options *ptr_option);
+
+/**/
+void ui_find_uf();
+
+/**/
+int uf_find(uf *uf_array, const int *uf_size);
+
+/**/
+void menu_continue();
+
+
+/**/
+void ui_read_options();
+
+/**/
+int menu_read_options();
 
 
 #endif //UI1_H

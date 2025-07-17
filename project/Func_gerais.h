@@ -5,6 +5,11 @@
 #ifndef FUNC_GERAIS_H
 #define FUNC_GERAIS_H
 
+//SE SISTEMA UNIX, MacOS ou Linux, PORFAVOR RETIRAR OS // ABAIXO E ATIVAR A DEFINIÇAO
+//#define unix
+
+//Debug mode
+//#define debug
 
 typedef enum bool
 {
