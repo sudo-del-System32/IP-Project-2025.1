@@ -1,5 +1,3 @@
-I got a lot of things right now, the UI link to uf functions probably gonna be next patch, so yeah I'm trying ok?
-In other themes, now fflush to fpurge conversion is easier, just change a line from comment to acctual code,
-It's in func_gerais.c in one of the first lines, theres a explication there.
-Thx for reading =)
--Sudo-del
+HOLY MOLLY ITS ALL WORKING WITH UF.
+Just 6 more, its tough.
+Anyway lets see if I gotta go faster now.
