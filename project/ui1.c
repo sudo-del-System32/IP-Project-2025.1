@@ -4,6 +4,7 @@
 
 #include "Func_gerais.h"
 #include "ui1.h"
+#include "uf1.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -22,9 +23,9 @@ void input_menu_checker()
         error = FALSE;
     }
 
-    //fpurge(stdin); //codigo não compila com esta função
     clean(stdin);
     scanf("%s", input_menu.str);
+
 
     input_menu.integer = atoi(input_menu.str);
 }
@@ -34,39 +35,141 @@ void input_menu_checker()
 
 //Functions for menu_start
 
-bool front_to_backend()
+bool front_to_backend(uf **uf_array, int *uf_size)
 {
     var_options option;
     var_types type = Exit_type;
 
     do
     {
+        type = Exit_type;
         option = menu_process();
         if (option != Exit_options && option != Vote)
             type = menu_data_types(&option);
-    } while (type == Exit_type && option != Vote);
+    } while (option != Exit_options && option != Vote && type == Exit_type );
 
     if (option == Exit_options)
-        return FALSE;
+        return TRUE;
 
     if (option == Vote)
     {
         menu_vote();
-        return FALSE;
+        return TRUE;
     }
 
 
-    if (type == Electors)
+    //Muito ineficiente e feio no codigo e desorganizado, mas unica maneira que eu achei de fazer.
+    //Create
+    int i;
+    if (option == Create_Data)
     {
+        system("cls");
+        if (type == Electors)
+        {
+        }
+        else if (type == Candidate)
+        {
+        }
+        else if (type == Electoral_College)
+        {
+            uf_create(uf_array, uf_size);
+        }
+        else if (type == Election)
+        {
+        }
+
     }
-    else if (type == Candidate)
+    //Read
+    else if (option == Read_Data)
     {
+        i = menu_read_options();
+        if (i == 1)
+        {
+            if (type == Electors)
+            {
+            }
+            else if (type == Candidate)
+            {
+            }
+            else if (type == Electoral_College)
+            {
+                i = uf_find(*uf_array, uf_size);
+                do
+                {
+                    system("cls");
+                    uf_read(*uf_array, i);
+                    menu_continue();
+                } while (error == TRUE);
+            }
+            else if (type == Election)
+            {
+            }
+        }
+        else
+        {
+            system("cls");
+
+            if (type == Electors)
+            {
+            }
+            else if (type == Candidate)
+            {
+            }
+            else if (type == Electoral_College)
+            {
+                do
+                {
+                    system("cls");
+
+                    uf_read_all(*uf_array, uf_size);
+                    menu_continue();
+                } while (error == TRUE);
+            }
+            else if (type == Election)
+            {}
+        }
     }
-    else if (type == Electoral_College)
+    //Update
+    else if (option == Update_Data)
     {
+        if (type == Electors)
+        {
+        }
+        else if (type == Candidate)
+        {
+        }
+        else if (type == Electoral_College)
+        {
+            i = uf_find(*uf_array, uf_size);
+            system("cls");
+            uf_read(*uf_array, i);
+            uf_update(uf_array, uf_size, i);
+            menu_continue();
+        }
+        else if (type == Election)
+        {
+        }
+
     }
-    else if (type == Election)
+    //Delete
+    else if (option == Delete_Data)
     {
+        if (type == Electors)
+        {
+        }
+        else if (type == Candidate)
+        {
+        }
+        else if (type == Electoral_College)
+        {
+            i = uf_find(*uf_array, uf_size);
+            (*uf_array)[i].status = 0;
+            menu_continue();
+        }
+        else if (type == Election)
+        {
+        }
+
     }
 
 
@@ -75,8 +178,9 @@ bool front_to_backend()
 
 
 //START
-void menu_start()
+void menu_start(uf **uf_array, int *uf_size)
 {
+    bool stay = TRUE;
     do
     {
         //for menu things
@@ -92,9 +196,9 @@ void menu_start()
         if (input_menu.integer == 2)
             break;
 
-        front_to_backend();
+        stay = front_to_backend(uf_array, uf_size);
 
-    } while (1);
+    } while (stay);
 
     system("cls");
     printf ("\nObrigado por utilizar Daniel's data bank, Boa noite.\n");
@@ -236,19 +340,15 @@ var_types menu_data_types(const var_options *ptr_option)
         switch (input_menu.integer)
         {
             case 1:
-                printf("APERTOU 1");
                 tem_type = Electors;
                 break;
             case 2:
-                printf("APERTOU 2");
                 tem_type = Candidate;
                 break;
             case 3:
-                printf("APERTOU 3");
                 tem_type = Electoral_College;
                 break;
             case 4:
-                printf("APERTOU 4");
                 tem_type = Election;
                 break;
             case 5:
@@ -311,4 +411,113 @@ void ui_string_choice(char str[] ,const var_options *ptr_option)
 }
 
 
+//Adicionar no .h
 
+
+void ui_find_uf()
+{
+    printf("\n==================Procurar==================\n\n");
+
+    printf("\tProcurar a UF por:\n");
+    printf("\t1.Codigo\n");
+    printf("\t2.Descricao\n");
+    printf("\t3.Sigla\n");
+    printf("\t4.Sair\n");
+
+    printf("\n==================Procurar==================\n");
+
+}
+
+int uf_find(uf *uf_array, const int *uf_size)
+{
+    int i;
+
+    do{
+
+        system("cls");
+
+        ui_find_uf();
+        if (i == -1)
+        {
+            printf("\n\n-UF NAO ENCONTRADA-\n\n");
+            error = FALSE;
+            i = 0;
+        }
+
+        input_menu_checker();
+
+        system("cls");
+        char str[30];
+        switch (input_menu.integer)
+        {
+            case 1:
+                input_int(&i,4,"codigo","UF");
+                i = uf_find_code(uf_array, uf_size, i);
+                break;
+            case 2:
+                input_char(str, 30, "nome", "UF");
+                i = uf_find_description(uf_array, uf_size, str);
+                break;
+            case 3:
+                input_char(str, 5, "sigla", "UF");
+                i = uf_find_acronym(uf_array, uf_size, str);
+                break;
+            case 4:
+                return 0;
+            default:
+                error = TRUE;
+        }
+        if (i == -1)
+            error = TRUE;
+
+
+    }   while (error == TRUE);
+
+
+    return i;
+
+}
+
+void menu_continue()
+{
+    printf("\nClick 1 para continuar\n\n");
+    input_menu_checker();
+    if (input_menu.integer != 1)
+        error = TRUE;
+}
+
+void ui_read_options()
+{
+    printf("\n==================Mostrar==================\n\n");
+
+    printf("\tMostrar: \n");
+    printf("\t1.Uma do tipo\n");
+    printf("\t2.Todos do tipo\n");
+    printf("\t3.Sair\n");
+
+    printf("\n==================Mostrar==================\n");
+
+}
+
+
+int menu_read_options()
+{
+    do{
+    system("cls");
+    ui_read_options();
+    input_menu_checker();
+    switch (input_menu.integer)
+    {
+        case 1:
+            return 1;
+        case 2:
+            return 2;
+        default:
+            error = TRUE;
+            break;
+
+    }
+
+    } while (TRUE);
+
+}

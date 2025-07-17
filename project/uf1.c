@@ -8,21 +8,31 @@
 #include <stdlib.h>
 
 
+void uf_start(uf **uf_array, int *uf_size)
+{
+    *uf_size = file_size("uf1.bin", sizeof(uf));
+    *uf_array = (uf *)malloc(*uf_size * sizeof(uf));
+    uf_file_to_array(*uf_array, uf_size);
+}
+
+
 
 void uf_array_expander(uf **uf_array, int *uf_size)
 {
     (*uf_size)++;
 
-    *uf_array = (uf *) realloc (*uf_array, sizeof(*uf_array) + sizeof(uf));
+    *uf_array = (uf *) realloc (*uf_array, *uf_size * sizeof(uf));
     if (*uf_array == NULL)
     {
         printf("\nError uf_array_expander\n");
         exit (-1);
     }
 
-    //Por algum motivo uf_array[*uf_size-1]->status = 0; != do abaixo, teria que ser (*uf_array)[*uf_size-1].status = 0;
-    //ja que anterior seria igual a *(uf_array + valor)
-    //(*uf_array + (*uf_size - 1))->status = 0;
+    #ifdef debug
+    printf("\n\nExpanded UF_SIZE: %d\n\n",*uf_size);
+    printf("\n\nExpanded *uf_size * sizeof(uf): %llu\n\n",*uf_size * sizeof(uf));
+    #endif
+
     (*uf_array)[*uf_size-1].status = 0;
 }
 
@@ -86,6 +96,10 @@ void uf_create(uf **uf_array, int *uf_size)
 {
 
     int i = uf_array_empty_space_finder(*uf_array ,uf_size);
+#ifdef debug
+    printf("\n\nUF_SIZE: %d\n\n",*uf_size);
+    printf("\n\n*uf_size * sizeof(uf): %llu\n\n",*uf_size * sizeof(uf));
+#endif
     if (i == -1)
     {
         uf_array_expander(uf_array ,uf_size);
@@ -97,15 +111,21 @@ void uf_create(uf **uf_array, int *uf_size)
         }
     }
 
-    input_int(&(*uf_array)[i].code,4,"codigo","UF");
-    input_char((*uf_array)[i].description, 30, "nome", "UF");
-    input_char((*uf_array)[i].acronym, 5, "sigla", "UF");
-    (*uf_array)[i].status = -1;
+    //uf_uptade
+    uf_update(uf_array, uf_size, i);
 }
+
 
 void uf_read(uf *uf_array, const int i)
 {
+    if (uf_array[i].status == 0)
+        return ;
+
+    printf("--------------------------------------\n");
+
+    #ifdef debug
     printf("DEBUG: STATUS == %d\n\n", uf_array[i].status);
+    #endif
 
     printf("Codigo do UF: %d\n\n", uf_array[i].code);
 
@@ -113,16 +133,100 @@ void uf_read(uf *uf_array, const int i)
 
     printf("Sigla do UF: %s\n\n", uf_array[i].acronym);
 
+
+    printf("--------------------------------------\n");
+
 }
+
 
 void uf_read_all(uf *uf_array, const int *uf_size)
 {
-    printf("--------------------------------------\n");
 
     for (int i = 0; i < *uf_size; i++)
     {
+        if (uf_array[i].status != 0)
         uf_read(uf_array, i);
     }
 
-    printf("--------------------------------------");
+}
+
+//Adicionar no .h
+
+
+
+int uf_find_code(const uf *uf_array, const int *uf_size, const int code)
+{
+
+    for (int i = 0; i < *uf_size; i++)
+    {
+        if (uf_array[i].status == 0)
+            continue;
+        if (uf_array[i].code == code)
+            return i;
+    }
+
+    return -1;
+}
+
+int uf_find_description(const uf *uf_array,const int *uf_size, char str[])
+{
+
+    for (int i = 0; i < *uf_size; i++)
+    {
+        if (uf_array[i].status == 0)
+            continue;
+        if (strcmp(str,uf_array[i].description) == 0)
+            return i;
+    }
+
+    return -1;
+}
+
+
+int uf_find_acronym(const uf *uf_array,const int *uf_size, char str[])
+{
+    for (int i = 0; i < *uf_size; i++)
+    {
+        if (uf_array[i].status == 0)
+            continue;
+        if (strcmp(str,uf_array[i].acronym) == 0)
+            return i;
+    }
+
+    return -1;
+}
+
+void uf_update(uf **uf_array, const int *uf_size, const int i)
+{
+    int state_original;
+    do
+    {
+        state_original = 0;
+        input_int(&(*uf_array)[i].code,4,"codigo","UF");
+        state_original = uf_find_code(*uf_array, uf_size, (*uf_array)[i].code);
+        if (state_original != -1)
+        {
+            printf("\n\nCodigo ja existe, tente novamente: \n");
+            continue;
+        }
+
+        input_char((*uf_array)[i].description, 30, "nome", "UF");
+        state_original = uf_find_description(*uf_array, uf_size, (*uf_array)[i].description);
+        if (state_original != -1)
+        {
+            printf("\n\nNome ja existe, tente novamente: \n");
+            continue;
+        }
+
+        input_char((*uf_array)[i].acronym, 5, "sigla", "UF");
+        state_original = uf_find_acronym(*uf_array, uf_size, (*uf_array)[i].acronym);
+        if (state_original != -1)
+        {
+            printf("\n\nSigla ja existe, tente novamente: \n");
+            continue;
+        }
+
+    }  while (state_original != -1);
+
+    (*uf_array)[i].status = -1;
 }
