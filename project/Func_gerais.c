@@ -38,11 +38,11 @@ int file_size(const char path[],const int _sizeof_typedata)
 
 
 
-void input_int(int *p ,const int _size ,const char var_name[] ,const char var_type[])
+void input_int(int *p ,const int _size ,const char var_name[] ,const char var_type[], const int blank)
 {
     //_size = n* de digitos que o numero podera ter
     bool flag;
-    char str[_size];
+    char str[255];
 
     do{
 
@@ -53,7 +53,7 @@ void input_int(int *p ,const int _size ,const char var_name[] ,const char var_ty
         clean(stdin);
         gets (str);
 
-        flag = verify_input(str , _size);
+        flag = verify_input(str , _size, blank);
 
         //Verificação especifica do codigo
         if (flag == TRUE)
@@ -80,35 +80,36 @@ void input_int(int *p ,const int _size ,const char var_name[] ,const char var_ty
 
 
 
-void input_char(char *p ,const int _size , const char var_name[] ,const char var_type[])
+void input_char(char *p ,const int _size , const char var_name[] ,const char var_type[], const int blank)
 {
     //_size = n* de caracteres
     bool flag;
+    char str[255];
 
     do{
 
         for (int i = 0; i < _size; i++)
-            p[i] = '\0';
+            str[i] = '\0';
 
         printf ("\nDigite o %s do %s: ", var_name, var_type);
         clean(stdin);
-        gets (p);
-        //fgets (p, _size, stdin);
+        gets (str);
 
-        flag = verify_input(p , _size);
+        flag = verify_input(str , _size, blank);
 
 
     } while (flag == FALSE);
 
+    strcpy(p,str);
     strupr(p);
 }
 
 
 
-bool verify_input(char str[], const int _size)
+bool verify_input(char str[], const int _size, const int blank)
 {
 
-    if (str[0] == '\0')
+    if (!blank && (str[0] == '\0' || str[0] == '\n'))
     {
         printf ("\nERRO: Campo vazio, tente novamente.\n\n");
         return FALSE;
@@ -136,4 +137,21 @@ void clean(FILE *_File)
     #endif
 }
 
+int just_numbers(bool blank, char str[], int start, int end)
+{
+    if (blank)
+        if (str[start] == '\0' || str[start] == '\n')
+            return -1;
+    for (int i = start; i <= end; i++)
+    {
+#ifdef debug
+        printf("str[%d]: %c\n", i, str[i]);
+#endif
+        if (str[i] < '0' || '9' < str[i])
+        {
+            return 0;
+        }
+    }
+    return -1;
+}
 

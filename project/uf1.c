@@ -159,6 +159,9 @@ int uf_find_code(const uf *uf_array, const int *uf_size, const int code)
 
     for (int i = 0; i < *uf_size; i++)
     {
+#ifdef debug
+        printf("uf_array[%d].code: %d\n", i, uf_array[i].code);
+#endif
         if (uf_array[i].status == 0)
             continue;
         if (uf_array[i].code == code)
@@ -168,11 +171,15 @@ int uf_find_code(const uf *uf_array, const int *uf_size, const int code)
     return -1;
 }
 
+//Nao é key nao sera utilizada
 int uf_find_description(const uf *uf_array,const int *uf_size, char str[])
 {
 
     for (int i = 0; i < *uf_size; i++)
     {
+#ifdef debug
+        printf("strcmp(str,uf_array[%d].description): %d\n", i, strcmp(str,uf_array[i].description));
+#endif
         if (uf_array[i].status == 0)
             continue;
         if (strcmp(str,uf_array[i].description) == 0)
@@ -187,6 +194,9 @@ int uf_find_acronym(const uf *uf_array,const int *uf_size, char str[])
 {
     for (int i = 0; i < *uf_size; i++)
     {
+#ifdef debug
+        printf("strcmp(str,uf_array[%d].acronym): %d\n", i, strcmp(str,uf_array[i].description));
+#endif
         if (uf_array[i].status == 0)
             continue;
         if (strcmp(str,uf_array[i].acronym) == 0)
@@ -198,34 +208,69 @@ int uf_find_acronym(const uf *uf_array,const int *uf_size, char str[])
 
 void uf_update(uf **uf_array, const int *uf_size, const int i)
 {
-    int state_original;
+    int state_original = 0;
+#ifdef manual_code
     do
     {
-        state_original = 0;
-        input_int(&(*uf_array)[i].code,4,"codigo","UF");
-        state_original = uf_find_code(*uf_array, uf_size, (*uf_array)[i].code);
+        int num;
+        input_int(&num,4,"codigo","UF", 1);
+        state_original = uf_find_code(*uf_array, uf_size, num);
+
+#ifdef debug
+        printf("state_original: %d\n", state_original);
+#endif
+        if (num == (*uf_array)[i].code)
+            state_original = -1;
+
         if (state_original != -1)
         {
             printf("\n\nCodigo ja existe, tente novamente: \n");
+            state_original = 0;
             continue;
         }
+        (*uf_array)[i].code = num;
+    }  while (state_original != -1);
+#else
+    (*uf_array)[i].code = i + 1;
+#endif
 
-        input_char((*uf_array)[i].description, 30, "nome", "UF");
-        state_original = uf_find_description(*uf_array, uf_size, (*uf_array)[i].description);
-        if (state_original != -1)
-        {
-            printf("\n\nNome ja existe, tente novamente: \n");
-            continue;
-        }
+    char str[30];
+    do
+    {
+        input_char(str, 30, "nome", "UF", TRUE);
 
-        input_char((*uf_array)[i].acronym, 5, "sigla", "UF");
-        state_original = uf_find_acronym(*uf_array, uf_size, (*uf_array)[i].acronym);
-        if (state_original != -1)
+
+        state_original = -1;
+
+#ifdef debug
+        printf("state_original: %d", state_original);
+#endif
+
+
+        strcpy((*uf_array)[i].description, str);
+    }  while (state_original != -1);
+
+    do
+    {
+
+        input_char(str, 5, "sigla", "UF", 1);
+        state_original = uf_find_acronym(*uf_array, uf_size, str);
+
+#ifdef debug
+        printf("state_original: %d", state_original);
+#endif
+
+        if (!strcmp(str,(*uf_array)[i].acronym))
+            state_original = -1;
+
+
+        if (state_original != -1 && strcmp(str,(*uf_array)[i].acronym))
         {
             printf("\n\nSigla ja existe, tente novamente: \n");
+            state_original = 0;
             continue;
         }
-
+        strcpy((*uf_array)[i].acronym, str);
     }  while (state_original != -1);
 
     (*uf_array)[i].status = -1;

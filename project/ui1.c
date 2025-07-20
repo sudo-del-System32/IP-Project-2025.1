@@ -4,7 +4,11 @@
 
 #include "Func_gerais.h"
 #include "ui1.h"
+
+
 #include "uf1.h"
+#include "people.h"
+#include "Election.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -25,7 +29,8 @@ void input_menu_checker()
 
     clean(stdin);
     scanf("%s", input_menu.str);
-
+    getchar();
+    clean(stdin);
 
     input_menu.integer = atoi(input_menu.str);
 }
@@ -35,10 +40,10 @@ void input_menu_checker()
 
 //Functions for menu_start
 
-bool front_to_backend(uf **uf_array, int *uf_size)
+void front_to_backend(uf **uf_array, int *uf_size, people **people_array, int *people_size, election **election_array, int *election_size)
 {
     var_options option;
-    var_types type = Exit_type;
+    var_types type;
 
     do
     {
@@ -49,12 +54,12 @@ bool front_to_backend(uf **uf_array, int *uf_size)
     } while (option != Exit_options && option != Vote && type == Exit_type );
 
     if (option == Exit_options)
-        return TRUE;
+        return ;
 
     if (option == Vote)
     {
         menu_vote();
-        return TRUE;
+        return ;
     }
 
 
@@ -66,6 +71,7 @@ bool front_to_backend(uf **uf_array, int *uf_size)
         system("cls");
         if (type == Electors)
         {
+            people_create(people_array, people_size);
         }
         else if (type == Candidate)
         {
@@ -76,6 +82,7 @@ bool front_to_backend(uf **uf_array, int *uf_size)
         }
         else if (type == Election)
         {
+            election_create(election_array, election_size, *uf_array, uf_size);
         }
 
     }
@@ -83,10 +90,21 @@ bool front_to_backend(uf **uf_array, int *uf_size)
     else if (option == Read_Data)
     {
         i = menu_read_options();
+        if (i == -1)
+            return ;
         if (i == 1)
         {
             if (type == Electors)
             {
+                i = people_find(*people_array, people_size);
+                if (i == -1)
+                    return ;
+                do
+                {
+                    system("cls");
+                    people_read(*people_array, i);
+                    menu_continue();
+                } while (error == TRUE);
             }
             else if (type == Candidate)
             {
@@ -94,6 +112,8 @@ bool front_to_backend(uf **uf_array, int *uf_size)
             else if (type == Electoral_College)
             {
                 i = uf_find(*uf_array, uf_size);
+                if (i == -1)
+                    return ;
                 do
                 {
                     system("cls");
@@ -103,6 +123,15 @@ bool front_to_backend(uf **uf_array, int *uf_size)
             }
             else if (type == Election)
             {
+                i = election_find_input(*election_array, election_size);
+                if (i == -1)
+                    return ;
+                do
+                {
+                    system("cls");
+                    election_read(*election_array, i);
+                    menu_continue();
+                } while (error == TRUE);
             }
         }
         else
@@ -111,6 +140,14 @@ bool front_to_backend(uf **uf_array, int *uf_size)
 
             if (type == Electors)
             {
+                do
+                {
+                    system("cls");
+
+                    people_read_all(*people_array, people_size);
+                    menu_continue();
+                } while (error == TRUE);
+
             }
             else if (type == Candidate)
             {
@@ -126,7 +163,15 @@ bool front_to_backend(uf **uf_array, int *uf_size)
                 } while (error == TRUE);
             }
             else if (type == Election)
-            {}
+            {
+                do
+                {
+                    system("cls");
+
+                    election_read_all(*election_array, election_size);
+                    menu_continue();
+                } while (error == TRUE);
+            }
         }
     }
     //Update
@@ -134,6 +179,14 @@ bool front_to_backend(uf **uf_array, int *uf_size)
     {
         if (type == Electors)
         {
+            i = people_find(*people_array, people_size);
+            if (i == -1)
+                return ;
+            system("cls");
+            people_read(*people_array, i);
+            people_update(people_array, people_size, i);
+            menu_continue();
+
         }
         else if (type == Candidate)
         {
@@ -141,13 +194,23 @@ bool front_to_backend(uf **uf_array, int *uf_size)
         else if (type == Electoral_College)
         {
             i = uf_find(*uf_array, uf_size);
+            if (i == -1)
+                return ;
             system("cls");
             uf_read(*uf_array, i);
             uf_update(uf_array, uf_size, i);
             menu_continue();
+
         }
         else if (type == Election)
         {
+            i = election_find_input(*election_array, election_size);
+            if (i == -1)
+                return ;
+            system("cls");
+            election_read(*election_array, i);
+            election_update(election_array, election_size, i, *uf_array, uf_size);
+            menu_continue();
         }
 
     }
@@ -156,6 +219,12 @@ bool front_to_backend(uf **uf_array, int *uf_size)
     {
         if (type == Electors)
         {
+            i = people_find(*people_array, people_size);
+            if (i == -1)
+                return ;
+            (*people_array)[i].status = 0;
+            menu_continue();
+
         }
         else if (type == Candidate)
         {
@@ -163,24 +232,28 @@ bool front_to_backend(uf **uf_array, int *uf_size)
         else if (type == Electoral_College)
         {
             i = uf_find(*uf_array, uf_size);
+            if (i == -1)
+                return ;
             (*uf_array)[i].status = 0;
             menu_continue();
         }
         else if (type == Election)
         {
+            i = election_find_input(*election_array, election_size);
+            if (i == -1)
+                return ;
+            (*election_array)[i].status = 0;
+            menu_continue();
         }
 
     }
 
-
-    return TRUE;
 }
 
 
 //START
-void menu_start(uf **uf_array, int *uf_size)
+void menu_start(uf **uf_array, int *uf_size, people **people_array, int *people_size, election **election_array, int *election_size)
 {
-    bool stay = TRUE;
     do
     {
         //for menu things
@@ -196,9 +269,9 @@ void menu_start(uf **uf_array, int *uf_size)
         if (input_menu.integer == 2)
             break;
 
-        stay = front_to_backend(uf_array, uf_size);
+        front_to_backend(uf_array, uf_size, people_array, people_size, election_array, election_size);
 
-    } while (stay);
+    } while (TRUE);
 
     system("cls");
     printf ("\nObrigado por utilizar Daniel's data bank, Boa noite.\n");
@@ -411,8 +484,7 @@ void ui_string_choice(char str[] ,const var_options *ptr_option)
 }
 
 
-//Adicionar no .h
-
+//UF
 
 void ui_find_uf()
 {
@@ -420,9 +492,9 @@ void ui_find_uf()
 
     printf("\tProcurar a UF por:\n");
     printf("\t1.Codigo\n");
-    printf("\t2.Descricao\n");
-    printf("\t3.Sigla\n");
-    printf("\t4.Sair\n");
+    //printf("\t2.Descricao\n");
+    printf("\t2.Sigla\n");
+    printf("\t3.Sair\n");
 
     printf("\n==================Procurar==================\n");
 
@@ -451,19 +523,21 @@ int uf_find(uf *uf_array, const int *uf_size)
         switch (input_menu.integer)
         {
             case 1:
-                input_int(&i,4,"codigo","UF");
+                input_int(&i,4,"codigo","UF", FALSE);
                 i = uf_find_code(uf_array, uf_size, i);
                 break;
+                /*
             case 2:
-                input_char(str, 30, "nome", "UF");
+                input_char(str, 30, "nome", "UF", FALSE);
                 i = uf_find_description(uf_array, uf_size, str);
                 break;
-            case 3:
-                input_char(str, 5, "sigla", "UF");
+                */
+            case 2: //3
+                input_char(str, 5, "sigla", "UF", FALSE);
                 i = uf_find_acronym(uf_array, uf_size, str);
                 break;
-            case 4:
-                return 0;
+            case 3: //4
+                return -1;
             default:
                 error = TRUE;
         }
@@ -477,6 +551,93 @@ int uf_find(uf *uf_array, const int *uf_size)
     return i;
 
 }
+
+//People
+
+void ui_find_people()
+{
+    printf("\n==================Procurar==================\n\n");
+
+    printf("\tProcurar por uma pessoa por meio do:\n");
+    printf("\t1.CPF\n");
+    printf("\t2.Titulo\n");
+    printf("\t3.Sair\n");
+
+    printf("\n==================Procurar==================\n");
+
+}
+
+int people_find(people *people_array, const int *people_size)
+{
+    int i = 0;
+
+    do{
+
+        system("cls");
+
+        ui_find_people();
+        if (i == -1)
+        {
+            printf("\n\n-Pessoa NAO ENCONTRADA-\n\n");
+            error = FALSE;
+            i = 0;
+        }
+
+        input_menu_checker();
+
+        system("cls");
+        char str[15];
+        switch (input_menu.integer)
+        {
+            case 1:
+                input_char(str,15,"CPF","Pessoas", FALSE);
+                i = people_find_cpf(people_array, people_size, str);
+                break;
+            case 2:
+                input_char(str, 13, "titulo de eleitor", "Pessoas", FALSE);
+                i = people_find_titulo(people_array, people_size, str);
+                break;
+            case 3:
+                return -1;
+            default:
+                error = TRUE;
+        }
+        if (i == -1)
+            error = TRUE;
+
+
+    }   while (error == TRUE);
+
+
+    return i;
+
+}
+
+//Election
+
+
+int election_find_input(election *election_array, const int *election_size)
+{
+    int year, uf_code;
+    system("cls");
+
+    input_int(&year,5,"ano","eleicao", FALSE);
+    input_int(&uf_code,8,"codigo","UF", FALSE);
+
+    int i = election_find(election_array, election_size, year, uf_code);
+
+    if (i == -1)
+    {
+        printf("\n\n-Eleicao NAO ENCONTRADA-\n\n");
+        menu_continue();
+    }
+    return i;
+
+}
+
+
+
+//menu continue
 
 void menu_continue()
 {
@@ -512,6 +673,8 @@ int menu_read_options()
             return 1;
         case 2:
             return 2;
+        case 3:
+            return -1;
         default:
             error = TRUE;
             break;

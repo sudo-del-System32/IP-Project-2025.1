@@ -6,6 +6,10 @@
 #include "Func_gerais.c"
 #include "uf1.h"
 #include "uf1.c"
+#include "people.h"
+#include "people.c"
+#include "Election.h"
+#include "Election.c"
 #include "ui1.h"
 #include "ui1.c"
 
@@ -18,12 +22,23 @@ int main()
 	int uf_size;
 	uf *uf_array;
 	uf_start(&uf_array, &uf_size);
+	//People
+	int people_size;
+	people *people_array;
+	people_start(&people_array, &people_size);
+	//Election
+	int election_size;
+	election *election_array;
+	election_start(&election_array, &election_size, uf_array);
 
 
-	menu_start(&uf_array, &uf_size);
+	menu_start(&uf_array, &uf_size, &people_array, &people_size, &election_array, &election_size);
 
 
+
+	election_array_to_file(election_array, &election_size);
 	uf_array_to_file(uf_array, &uf_size);
+	people_array_to_file(people_array, &people_size);
 	free(uf_array);
 	return 0;
 }

@@ -5,11 +5,14 @@
 #ifndef UF1_H
 #define UF1_H
 
+//#define manual_code
+
+
 struct uf
 {
-    int code;
-    char description[30];
-    char acronym[5];
+    int code; //Pkey
+    char description[30]; //*
+    char acronym[5]; //Key
     int status; //0 Empty //1 Full //-1 Modified
 };
 

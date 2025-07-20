@@ -21,7 +21,7 @@ typedef enum menu_options
     Delete_Data = 50,
     Exit_options = 60
 
-   }var_options;
+}var_options;
 
 typedef enum types
 {
@@ -30,7 +30,6 @@ typedef enum types
     Electoral_College = 3,
     Election = 4,
     Exit_type = 6
-
 
 }var_types;
 
@@ -45,15 +44,15 @@ typedef enum types
  */
 void input_menu_checker();
 
-
-bool front_to_backend(uf **uf_array, int *uf_size);
+/**/
+void front_to_backend(uf **uf_array, int *uf_size, people **people_array, int *people_size, election **election_array, int *election_size);
 
 
 
 /*
  ** Utilizado para escolha das opções do menu de inicio.
  */
-void menu_start(uf **uf_array, int *uf_size);
+void menu_start(uf **uf_array, int *uf_size, people **people_array, int *people_size, election **election_array, int *election_size);
 
 /*
  ** Utilizado para o output das opções do menu de inicio.
@@ -101,9 +100,17 @@ void ui_find_uf();
 /**/
 int uf_find(uf *uf_array, const int *uf_size);
 
+
+void ui_find_people();
+
+int people_find(people *people_array, const int *people_size);
+
+int election_find_input(election *election_array, const int *election_size);
+
+
+//MENU CONTINUAR
 /**/
 void menu_continue();
-
 
 /**/
 void ui_read_options();
