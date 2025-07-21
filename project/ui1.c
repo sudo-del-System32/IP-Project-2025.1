@@ -6,12 +6,12 @@
 #include "ui1.h"
 
 
-#include "uf1.h"
-#include "people.h"
-#include "Election.h"
-
-#include <stdio.h>
-#include <stdlib.h>
+// #include "uf1.h"
+// #include "people.h"
+// #include "Election.h"
+// #include "Candidate.h"
+// #include <stdio.h>
+// #include <stdlib.h>
 
 
 input input_menu;
@@ -40,7 +40,7 @@ void input_menu_checker()
 
 //Functions for menu_start
 
-void front_to_backend(uf **uf_array, int *uf_size, people **people_array, int *people_size, election **election_array, int *election_size)
+void front_to_backend(uf **uf_array, int *uf_size, people **people_array, int *people_size, election **election_array, int *election_size, candidate **candidate_array, int *candidate_size)
 {
     var_options option;
     var_types type;
@@ -75,6 +75,7 @@ void front_to_backend(uf **uf_array, int *uf_size, people **people_array, int *p
         }
         else if (type == Candidate)
         {
+            candidate_create(candidate_array, candidate_size, *election_array, election_size, *people_array, people_size);
         }
         else if (type == Electoral_College)
         {
@@ -108,6 +109,10 @@ void front_to_backend(uf **uf_array, int *uf_size, people **people_array, int *p
             }
             else if (type == Candidate)
             {
+                i = candidate_find(*candidate_array, candidate_size, *uf_size);
+                if (i == -1)
+                    return;
+                    menu_continue();
             }
             else if (type == Electoral_College)
             {
@@ -151,6 +156,13 @@ void front_to_backend(uf **uf_array, int *uf_size, people **people_array, int *p
             }
             else if (type == Candidate)
             {
+                do
+                {
+                    system("cls");
+
+                    candidate_read_all(*candidate_array, candidate_size);
+                    menu_continue();
+                } while (error == TRUE);
             }
             else if (type == Electoral_College)
             {
@@ -190,6 +202,23 @@ void front_to_backend(uf **uf_array, int *uf_size, people **people_array, int *p
         }
         else if (type == Candidate)
         {
+            system("cls");
+            int year, code, number;
+            input_int(&year,5,"Ano","qual o candidato participou", FALSE);
+            input_int(&code,8,"Codigo do Estado","qual o candidato faz parte", FALSE);
+            input_int(&number,3,"Numero","candidato", FALSE);
+
+            i = candidate_find_number_year_code(*candidate_array, candidate_size, year, code, number);
+            if (i == -1)
+            {
+                printf("Candidato nao exite");
+                menu_continue();
+                return ;
+            }
+            system("cls");
+            candidate_read(*candidate_array, i);
+            candidate_update(candidate_array, candidate_size, i, *election_array, election_size, *people_array, people_size);
+            menu_continue();
         }
         else if (type == Electoral_College)
         {
@@ -228,6 +257,21 @@ void front_to_backend(uf **uf_array, int *uf_size, people **people_array, int *p
         }
         else if (type == Candidate)
         {
+            system("cls");
+            int year, code, number;
+            input_int(&year,5,"Ano","qual o candidato participou", FALSE);
+            input_int(&code,8,"Codigo do Estado","qual o candidato faz parte", FALSE);
+            input_int(&number,3,"Numero","candidato", FALSE);
+
+            i = candidate_find_number_year_code(*candidate_array, candidate_size, year, code, number);
+            if (i == -1)
+            {
+                printf("\nCandidato nao exite.\n\n");
+                menu_continue();
+                return ;
+            }
+            (*candidate_array)[i].status = 0;
+            menu_continue();
         }
         else if (type == Electoral_College)
         {
@@ -252,7 +296,7 @@ void front_to_backend(uf **uf_array, int *uf_size, people **people_array, int *p
 
 
 //START
-void menu_start(uf **uf_array, int *uf_size, people **people_array, int *people_size, election **election_array, int *election_size)
+void menu_start(uf **uf_array, int *uf_size, people **people_array, int *people_size, election **election_array, int *election_size, candidate **candidate_array, int *candidate_size)
 {
     do
     {
@@ -269,7 +313,7 @@ void menu_start(uf **uf_array, int *uf_size, people **people_array, int *people_
         if (input_menu.integer == 2)
             break;
 
-        front_to_backend(uf_array, uf_size, people_array, people_size, election_array, election_size);
+        front_to_backend(uf_array, uf_size, people_array, people_size, election_array, election_size, candidate_array, candidate_size);
 
     } while (TRUE);
 
@@ -635,7 +679,67 @@ int election_find_input(election *election_array, const int *election_size)
 
 }
 
+//Candidate
 
+void ui_find_candidate()
+{
+    printf("\n==================Procurar==================\n\n");
+
+    printf("\tListar candidatos de um:\n");
+    printf("\t1.Ano e uma UF\n");
+    printf("\t2.Ano\n");
+    printf("\t3.Sair\n");
+
+    printf("\n==================Procurar==================\n");
+
+}
+
+int candidate_find(candidate *candidate_array, int *candidate_size, int uf_size)
+{
+    int i = 0;
+    do{
+
+        system("cls");
+
+        ui_find_candidate();
+        if (i == -1)
+        {
+            printf("\n\n-Candidato NAO ENCONTRADA-\n\n");
+            error = FALSE;
+            i = 0;
+        }
+
+        input_menu_checker();
+
+        system("cls");
+        int year;
+        int uf_code;
+        switch (input_menu.integer)
+        {
+            case 1:
+                input_int(&year,5,"Ano","qual o candidato participou", FALSE);
+                input_int(&uf_code,8,"Codigo do Estado","qual o candidato faz parte", FALSE);
+                i = candidate_find_and_read_for_year_number(candidate_array, candidate_size, year, uf_code);
+                break;
+            case 2:
+                input_int(&year,5,"Ano","qual o candidato participou", FALSE);
+                i = candidate_find_and_read_for_year(candidate_array, candidate_size, year, uf_size);
+                break;
+            case 3:
+                return -1;
+            default:
+                error = TRUE;
+        }
+        if (i == -1)
+            error = TRUE;
+
+
+    }   while (error == TRUE);
+
+
+    return i;
+
+}
 
 //menu continue
 

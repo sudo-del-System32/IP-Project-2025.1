@@ -35,11 +35,9 @@ void people_read(people *people_array, const int i);
 
 void people_read_all(people *people_array, const int *people_size);
 
-int people_find_code(const people *people_array, const int *people_size, const int code);
+int people_find_cpf(const people *people_array, const int *people_size, const char cpf[]);
 
-int people_find_description(const people *people_array,const int *people_size, char str[]);
-
-int people_find_acronym(const people *people_array,const int *people_size, char str[]);
+int people_find_titulo(const people *people_array,const int *people_size, char str[]);
 
 void people_update(people **people_array, const int *people_size, const int i);
 

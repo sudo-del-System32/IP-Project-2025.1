@@ -45,14 +45,14 @@ typedef enum types
 void input_menu_checker();
 
 /**/
-void front_to_backend(uf **uf_array, int *uf_size, people **people_array, int *people_size, election **election_array, int *election_size);
+void front_to_backend(uf **uf_array, int *uf_size, people **people_array, int *people_size, election **election_array, int *election_size, candidate **candidate_array, int *candidate_size);
 
 
 
 /*
  ** Utilizado para escolha das opções do menu de inicio.
  */
-void menu_start(uf **uf_array, int *uf_size, people **people_array, int *people_size, election **election_array, int *election_size);
+void menu_start(uf **uf_array, int *uf_size, people **people_array, int *people_size, election **election_array, int *election_size, candidate **candidate_array, int *candidate_size);
 
 /*
  ** Utilizado para o output das opções do menu de inicio.
@@ -106,6 +106,10 @@ void ui_find_people();
 int people_find(people *people_array, const int *people_size);
 
 int election_find_input(election *election_array, const int *election_size);
+
+void ui_find_candidate();
+
+int candidate_find(candidate *candidate_array, int *candidate_size, int uf_size);
 
 
 //MENU CONTINUAR

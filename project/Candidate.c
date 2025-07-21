@@ -5,22 +5,20 @@
 #include "Candidate.h"
 
 
-#include "Func_gerais.h"
-#include "uf1.h"
-//#include "people.h"
-//#include "Election.h"
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+// #include "Func_gerais.h"
+// #include "people.h"
+// #include "Election.h"
+// #include <stdio.h>
+// #include <stdlib.h>
 
 
-void candidate_start(candidate **candidate_array, int *candidate_size, uf *uf_array)
+void candidate_start(candidate **candidate_array, int *candidate_size, election *election_array, people *people_array)
 {
     *candidate_size = file_size("candidate.bin", sizeof(candidate));
     *candidate_array = (candidate *)malloc(*candidate_size * sizeof(candidate));
     candidate_file_to_array(*candidate_array, candidate_size);
     for (int i = 0; i < *candidate_size; i++)
-        candidate_get_pointer(*candidate_array, i, uf_array);
+        candidate_get_pointer(*candidate_array, i, election_array, people_array);
 }
 
 
@@ -101,7 +99,7 @@ int candidate_array_empty_space_finder(const candidate *candidate_array, const i
 }
 
 
-void candidate_create(candidate **candidate_array, int *candidate_size, uf *uf_array, int *uf_size)
+void candidate_create(candidate **candidate_array, int *candidate_size, election *election_array, int *election_size, people *people_array, int *people_size)
 {
 
     int i = candidate_array_empty_space_finder(*candidate_array ,candidate_size);
@@ -120,7 +118,7 @@ void candidate_create(candidate **candidate_array, int *candidate_size, uf *uf_a
         }
     }
 
-    candidate_update(candidate_array, candidate_size, i, uf_array, uf_size);
+    candidate_update(candidate_array, candidate_size, i, election_array, election_size, people_array, people_size);
 }
 
 
@@ -135,13 +133,15 @@ void candidate_read(candidate *candidate_array, const int i)
     printf("DEBUG: STATUS == %d\n\n", candidate_array[i].status);
     #endif
 
-    printf("Ano: %d\n\n", candidate_array[i].year);
+    printf("Nome: %s\n\n", candidate_array[i].ptr_people[0].name);
 
-    printf("Descricao: %s\n\n", candidate_array[i].description);
+    printf("Numero: %d\n\n", candidate_array[i].candidate_number);
 
-    printf("Codigo do UF da Eleicao: %d\n\n", candidate_array[i].ptr_state[0].code);
+    printf("Ano: %d\n\n", candidate_array[i].ptr_election[0].year);
 
-    printf("Nome do UF da Eleicao: %s\n\n",  candidate_array[i].ptr_state[0].description);
+    printf("Estado: %s\n\n",  candidate_array[i].ptr_election[0].ptr_state[0].description);
+
+    printf("Descricao da Eleicao: %s\n\n",  candidate_array[i].ptr_election[0].description);
 
 
 
@@ -161,28 +161,88 @@ void candidate_read_all(candidate *candidate_array, const int *candidate_size)
 
 }
 
-
-int candidate_find(const candidate *candidate_array, const int *candidate_size, int year, int code)
+ //How to find the candidates of a year + code
+int candidate_find_and_read_for_year_number(candidate *candidate_array, int *candidate_size, int year, int code)
 {
-    int i;
 
-    for (i = 0; i < *candidate_size; i++)
+    int happened = -1;
+
+    for (int i = 0; i < *candidate_size; i++)
     {
-
         if (candidate_array[i].status == 0)
             continue;
-        if (candidate_array[i].year == year && candidate_array[i].uf_code == code)
+        if (candidate_array[i].ptr_election[0].year == year && candidate_array[i].ptr_election[0].uf_code == code)
+        {
+            candidate_read(candidate_array, i);
+            happened = 0;
+        }
+    }
+
+    return happened;
+}
+
+
+int candidate_find_and_read_for_year(candidate *candidate_array, int *candidate_size, int year, int uf_size)
+{
+
+    int happened = -1;
+
+
+    for (int i = 0; i < uf_size; i++)
+    {
+        for (int j = 0; j < *candidate_size; j++)
+        {
+            if (candidate_array[j].status == 0)
+                continue;
+            if (candidate_array[j].ptr_election[0].uf_code == i+1)
+                if (candidate_array[j].ptr_election[0].year == year)
+                {
+                    candidate_read(candidate_array, j);
+                    happened = 0;
+                }
+        }
+    }
+
+    return happened;
+}
+
+
+
+int candidate_find_number_year_code(candidate *candidate_array, int *candidate_size, int year, int uf_code, int number)
+{
+    for (int i = 0; i < *candidate_size; i++)
+    {
+        if (candidate_array[i].status == 0)
+            continue;
+        if (candidate_array[i].ptr_election[0].year == year && candidate_array[i].ptr_election[0].uf_code == uf_code && candidate_array[i].candidate_number == number)
             return i;
     }
 
     return -1;
 }
 
-void candidate_update(candidate **candidate_array, const int *candidate_size, const int i, uf *uf_array, int *uf_size)
+
+int candidate_validation(const candidate *candidate_array, const int *candidate_size, int number, const election *election_array, const int *election_size,int year, int code)
+{
+    int locale = election_find(election_array, election_size, year, code);
+    if (locale == -1) //Nao existe a eleiçao
+        return -2;
+    for (int i = 0; i < *candidate_size; i++)
+    {
+        if (candidate_array[i].status == 0)
+            continue;
+        if (candidate_array[i].election_locale == locale && candidate_array[i].candidate_number == number)
+            return i;
+    }
+
+    return -1;
+}
+
+void candidate_update(candidate **candidate_array, const int *candidate_size, const int i, election *election_array, int *election_size, people *people_array, int *people_size)
 {
     int state_original = 0;
-    char str[67];
-    int year = 0, code = 0;
+    char str[15];
+    int year = 0, code = 0, number =0;
 
     do
     {
@@ -196,52 +256,86 @@ void candidate_update(candidate **candidate_array, const int *candidate_size, co
             }
         //UF
         code = 0;
-        input_int(&code,8,"codigo","UF", FALSE);
+        input_int(&code,8,"codigo","UF da eleicao", FALSE);
 
-        state_original = uf_find_code(uf_array, uf_size, code);
+        //Numero do candidato
+        number = 0;
+        input_int(&number,3,"numero","candidato", FALSE);
 
-        if (state_original == -1)
+        state_original = candidate_validation(*candidate_array, candidate_size, number, election_array, election_size, year, code);
+
+        if (state_original == -2)
         {
-            printf("A UF nao existe");
+            printf("\nEleicao inexistente, tente se candidatar a outra.\n\n");
             state_original = 0;
             continue;
         }
 
-        state_original = election_find(*candidate_array, candidate_size, year, code);
 
-        if (state_original != -1 && (year == (*candidate_array)[i].year && code == (*candidate_array)[i].uf_code))
-            state_original = -1;
-        if (state_original != -1)
+        if (state_original != -1 && state_original != i)
         {
-            printf("A eleicao de %d para %s ja existe", year, uf_array[state_original-1].description);
+            printf("\nCandidato com o numero %d, do UF de codigo %d, da eleicao do ano %d, ja existe\n\n",number, code, year);
+            state_original = 0;
             continue;
         }
 
-    } while (state_original != -1);
 
-    (*candidate_array)[i].year = year;
-    (*candidate_array)[i].uf_code = code;
+    } while (state_original != -1 && state_original != i);
 
 
-
-    //Description
+    //CPF
+    do
     {
-        input_char(str, 67, "Descricao", "Eleicao", TRUE);
-        strcpy((*candidate_array)[i].description, str);
-    }
+        input_char(str,15,"CPF","candidato", FALSE);
+        if (str[3] != '.' || str[7] != '.' || str[11] != '-')
+            state_original = 0;
 
-    candidate_get_pointer(*candidate_array, i, uf_array);
+        if (state_original == -1)
+            state_original = just_numbers(FALSE, str, 0, 2);
+        if (state_original == -1)
+            state_original = just_numbers(FALSE, str, 4, 6);
+        if (state_original == -1)
+            state_original = just_numbers(FALSE, str, 8, 10);
+        if (state_original == -1)
+            state_original = just_numbers(FALSE, str, 12, 13);
+
+        if (state_original != -1)
+        {
+            printf("\n\nCPF possui erro de digitacao: \n");
+            printf("\n\nExemplo de cpf: 123.132.122-42 \n");
+            state_original = -1;
+            continue;
+        }
+
+        state_original = people_find_cpf(people_array, people_size, str);
+        if (state_original == -1)
+        {
+            printf("\n\nCPF nao existe. \n");
+            continue;
+        }
+
+        (*candidate_array)[i].people_locale = state_original;
+    }  while (state_original == -1);
+
+    (*candidate_array)[i].election_locale = election_find(election_array, election_size, year, code);
+
+    candidate_get_pointer(*candidate_array, i, election_array, people_array);
+
+    (*candidate_array)[i].candidate_number = number;
 
     (*candidate_array)[i].status = -1;
 }
 
 
-void candidate_get_pointer(candidate *candidate_array, int i, uf *uf_array)
+void candidate_get_pointer(candidate *candidate_array, int i, election *ptr_election, people *ptr_people)
 {
-    candidate_array[i].ptr_state = &uf_array[candidate_array[i].uf_code - 1];
+    candidate_array[i].ptr_election = &ptr_election[candidate_array[i].election_locale];
+    candidate_array[i].ptr_people = &ptr_people[candidate_array[i].people_locale];
 }
 
-void candidate_get_uf_code(candidate *candidate_array, int i)
+void candidate_get_locale(candidate *candidate_array, int i, election *election_array, people *people_array)
 {
-    candidate_array[i].uf_code = candidate_array[i].ptr_state->code;
+    candidate_array[i].election_locale = (candidate_array[i].ptr_election - election_array)/sizeof(election);
+    candidate_array[i].people_locale = (candidate_array[i].ptr_people - people_array)/sizeof(people);
+
 }
