@@ -89,7 +89,7 @@ void front_to_backend(uf **uf_array, int *uf_size, people **people_array, int *p
         {
             election_create(election_array, election_size, *uf_array, uf_size);
         }
-
+        get_pointer_all(*uf_array, *people_array, *election_array, *election_size, *candidate_array, *candidate_size, vote_array, *vote_size, attendance_array, *attendance_size);
     }
     //Read
     else if (option == Read_Data)
@@ -924,4 +924,20 @@ int menu_read_options()
 
     } while (TRUE);
 
+}
+
+
+void get_pointer_all(uf *uf_array, people *people_array, election *election_array, int election_size, candidate *candidate_array, int candidate_size, vote **vote_array, int vote_size, attendance **attendance_array, int attendance_size)
+{
+    for (int i = 0; i < election_size; i++)
+    election_get_pointer(election_array, i, uf_array);
+
+    for (int i = 0; i < candidate_size; i++)
+    candidate_get_pointer(candidate_array, i, election_array, people_array);
+
+    for (int i = 0; i < vote_size; i++)
+    vote_get_pointer(vote_array, i, candidate_array, election_array);
+
+    for (int i = 0; i < attendance_size; i++)
+    attendance_get_pointer(attendance_array, i, election_array, people_array);
 }

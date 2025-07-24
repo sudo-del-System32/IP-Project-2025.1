@@ -132,5 +132,6 @@ void ui_read_options();
 /**/
 int menu_read_options();
 
+void get_pointer_all(uf *uf_array, people *people_array, election *election_array, int election_size, candidate *candidate_array, int candidate_size, vote **vote_array, int vote_size, attendance **attendance_array, int attendance_size);
 
 #endif //UI1_H
