@@ -5,11 +5,6 @@
 #include "Election.h"
 
 
-// #include "Func_gerais.h"
-// #include "uf1.h"
-// #include <stdio.h>
-// #include <stdlib.h>
-// #include <string.h>
 
 
 void election_start(election **election_array, int *election_size, uf *uf_array)

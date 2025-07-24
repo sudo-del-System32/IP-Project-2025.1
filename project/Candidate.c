@@ -5,11 +5,6 @@
 #include "Candidate.h"
 
 
-// #include "Func_gerais.h"
-// #include "people.h"
-// #include "Election.h"
-// #include <stdio.h>
-// #include <stdlib.h>
 
 
 void candidate_start(candidate **candidate_array, int *candidate_size, election *election_array, people *people_array)

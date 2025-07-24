@@ -5,11 +5,6 @@
 #include "uf1.h"
 
 
-// #include "Func_gerais.h"
-// #include <stdio.h>
-// #include <stdlib.h>
-
-
 void uf_start(uf **uf_array, int *uf_size)
 {
     *uf_size = file_size("uf1.bin", sizeof(uf));

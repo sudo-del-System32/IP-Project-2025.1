@@ -4,11 +4,6 @@
 
 #include "attendance.h"
 
-#include <stdlib.h>
-
-#include "Election.h"
-#include "Func_gerais.h"
-#include "people.h"
 
 
 void attendance_start(attendance **attendance_array, int *attendance_size, election *election_array, people *people_array)

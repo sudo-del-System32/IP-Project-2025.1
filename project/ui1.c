@@ -4,18 +4,7 @@
 
 #include "ui1.h"
 
-#include "Vote.h"
 
-// #include <stdio.h>
-// #include <stdlib.h>
-//
-// #include "Func_gerais.h"
-// #include "uf1.h"
-// #include "people.h"
-// #include "Election.h"
-// #include "Candidate.h"
-// #include "attendance.h"
-// #include "vote.h"
 
 
 input input_menu;

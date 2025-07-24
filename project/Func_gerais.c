@@ -5,8 +5,6 @@
 #include "Func_gerais.h"
 
 
-// #include <stdio.h>
-// #include <stdlib.h>
 
 
 FILE *ptr_file(const char path[])
