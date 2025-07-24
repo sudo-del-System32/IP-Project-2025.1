@@ -8,12 +8,10 @@
 typedef struct candidate
 {
     int election_locale; //Pk* year
-    //int uf_locale; //Pk* uf
     int people_locale; //Pk* cpf
     int candidate_number; //* 2 digitos
 
     election *ptr_election;
-    //uf *ptr_uf;
     people *ptr_people;
 
     int status;
@@ -60,6 +58,11 @@ void candidate_get_pointer(candidate *candidate_array, int i, election *ptr_elec
 
 void candidate_get_locale(candidate *candidate_array, int i, election *election_array, people *people_array);
 
+int candidate_find_number(candidate *candidate_array, int *candidate_size, int code);
+
+int candidate_find_year(candidate *candidate_array, int *candidate_size, int year);
+
+int candidate_find_uf(candidate *candidate_array, int *candidate_size, int uf);
 
 
 #endif //CANDIDATE_H

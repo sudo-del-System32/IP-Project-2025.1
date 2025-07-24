@@ -8,7 +8,7 @@
 typedef struct input
 {
     int integer;
-    char str[2];
+    char str[255];
 
 }input;
 
@@ -45,14 +45,15 @@ typedef enum types
 void input_menu_checker();
 
 /**/
-void front_to_backend(uf **uf_array, int *uf_size, people **people_array, int *people_size, election **election_array, int *election_size, candidate **candidate_array, int *candidate_size);
+void front_to_backend(uf **uf_array, int *uf_size, people **people_array, int *people_size, election **election_array, int *election_size, candidate **candidate_array, int *candidate_size, attendance **attendance_array, int *attendance_size, vote **vote_array, int *vote_size);
 
 
 
 /*
  ** Utilizado para escolha das opções do menu de inicio.
  */
-void menu_start(uf **uf_array, int *uf_size, people **people_array, int *people_size, election **election_array, int *election_size, candidate **candidate_array, int *candidate_size);
+void menu_start(uf **uf_array, int *uf_size, people **people_array, int *people_size, election **election_array, int *election_size, candidate **candidate_array, int *candidate_size, attendance **attendance_array, int *attendance_size, vote **vote_array, int *vote_size);
+
 
 /*
  ** Utilizado para o output das opções do menu de inicio.
@@ -69,16 +70,25 @@ var_options menu_process();
  */
 void ui_process();
 
+//votos
 /*
  ** Utilizado para escolha das opções do menu de voto.
  */
-void menu_vote();
+void menu_vote(vote **vote_array, int *vote_size, attendance **attendance_array, int *attendance_size, candidate **candidate_array, int *candidate_size, people *people_array, int *people_size, uf *uf_array, int *uf_size, election *election_array);
+
 
 /*
  ** Utilizado para o output das opções do menu de voto.
  */
 void ui_vote();
 
+void vote_results(vote **vote_array, int *vote_size, attendance **attendance_array, int *attendance_size, uf *uf_array, int uf_size);
+
+
+void ui_vote_results();
+
+
+//MENUS
 /*
  ** Utilizado para escolha das opções do menu de tipos dados.
  */

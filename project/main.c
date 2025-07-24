@@ -12,6 +12,10 @@
 #include "Election.c"
 #include "Candidate.h"
 #include "Candidate.c"
+#include "attendance.h"
+#include "attendance.c"
+#include "vote.h"
+#include "vote.c"
 #include "ui1.h"
 #include "ui1.c"
 
@@ -36,10 +40,21 @@ int main()
 	candidate *candidate_array;
 	int candidate_size;
 	candidate_start(&candidate_array, &candidate_size, election_array, people_array);
+	//attendance
+	attendance *attendance_array;
+	int attendance_size;
+	attendance_start(&attendance_array, &attendance_size, election_array, people_array);
+	//vote
+	vote *vote_array;
+	int vote_size;
+	vote_start(&vote_array, &vote_size, candidate_array, election_array);
 
-	menu_start(&uf_array, &uf_size, &people_array, &people_size, &election_array, &election_size, &candidate_array, &candidate_size);
+
+	menu_start(&uf_array, &uf_size, &people_array, &people_size, &election_array, &election_size, &candidate_array, &candidate_size, &attendance_array, &attendance_size, &vote_array, &vote_size);
 
 
+	attendance_array_to_file(attendance_array, &attendance_size);
+	vote_array_to_file(vote_array, &vote_size);
 	candidate_array_to_file(candidate_array, &candidate_size);
 	election_array_to_file(election_array, &election_size);
 	uf_array_to_file(uf_array, &uf_size);

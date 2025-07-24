@@ -66,4 +66,9 @@ void clean(FILE *_File);
 
 int just_numbers(bool blank, char str[], int start, int end);
 
+
+void clean_stdin();
+
+
+
 #endif //FUNC_GERAIS_H

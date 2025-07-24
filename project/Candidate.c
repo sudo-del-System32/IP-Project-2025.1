@@ -127,7 +127,7 @@ void candidate_read(candidate *candidate_array, const int i)
     if (candidate_array[i].status == 0)
         return ;
 
-    printf("--------------------------------------\n");
+    printf("---------------------------------------------------------------------------\n");
 
     #ifdef debug
     printf("DEBUG: STATUS == %d\n\n", candidate_array[i].status);
@@ -145,7 +145,7 @@ void candidate_read(candidate *candidate_array, const int i)
 
 
 
-    printf("--------------------------------------\n");
+    printf("---------------------------------------------------------------------------\n");
 
 }
 
@@ -254,6 +254,8 @@ void candidate_update(candidate **candidate_array, const int *candidate_size, co
                 printf("Ano invalido, ano tem que possuir 4 digitos.");
                 continue;
             }
+
+
         //UF
         code = 0;
         input_int(&code,8,"codigo","UF da eleicao", FALSE);
@@ -338,4 +340,60 @@ void candidate_get_locale(candidate *candidate_array, int i, election *election_
     candidate_array[i].election_locale = (candidate_array[i].ptr_election - election_array)/sizeof(election);
     candidate_array[i].people_locale = (candidate_array[i].ptr_people - people_array)/sizeof(people);
 
+}
+
+//Using into vote
+
+int candidate_find_number(candidate *candidate_array, int *candidate_size, int code)
+{
+
+    int happened = -1;
+
+    for (int i = 0; i < *candidate_size; i++)
+    {
+        if (candidate_array[i].status == 0)
+            continue;
+        if (candidate_array[i].candidate_number == code)
+        {
+            return i;
+        }
+    }
+
+    return happened;
+}
+
+int candidate_find_year(candidate *candidate_array, int *candidate_size, int year)
+{
+
+    int happened = -1;
+
+    for (int i = 0; i < *candidate_size; i++)
+    {
+        if (candidate_array[i].status == 0)
+            continue;
+        if (candidate_array[i].ptr_election[0].year == year)
+        {
+            return i;
+        }
+    }
+
+    return happened;
+}
+
+int candidate_find_uf(candidate *candidate_array, int *candidate_size, int uf)
+{
+
+    int happened = -1;
+
+    for (int i = 0; i < *candidate_size; i++)
+    {
+        if (candidate_array[i].status == 0)
+            continue;
+        if (candidate_array[i].ptr_election[0].uf_code == uf)
+        {
+            return i;
+        }
+    }
+
+    return happened;
 }

@@ -2,16 +2,20 @@
 // Created by franc on 09/07/2025.
 //
 
-#include "Func_gerais.h"
 #include "ui1.h"
 
+#include "Vote.h"
 
+// #include <stdio.h>
+// #include <stdlib.h>
+//
+// #include "Func_gerais.h"
 // #include "uf1.h"
 // #include "people.h"
 // #include "Election.h"
 // #include "Candidate.h"
-// #include <stdio.h>
-// #include <stdlib.h>
+// #include "attendance.h"
+// #include "vote.h"
 
 
 input input_menu;
@@ -40,7 +44,7 @@ void input_menu_checker()
 
 //Functions for menu_start
 
-void front_to_backend(uf **uf_array, int *uf_size, people **people_array, int *people_size, election **election_array, int *election_size, candidate **candidate_array, int *candidate_size)
+void front_to_backend(uf **uf_array, int *uf_size, people **people_array, int *people_size, election **election_array, int *election_size, candidate **candidate_array, int *candidate_size, attendance **attendance_array, int *attendance_size, vote **vote_array, int *vote_size)
 {
     var_options option;
     var_types type;
@@ -54,12 +58,12 @@ void front_to_backend(uf **uf_array, int *uf_size, people **people_array, int *p
     } while (option != Exit_options && option != Vote && type == Exit_type );
 
     if (option == Exit_options)
-        return ;
+        return;
 
     if (option == Vote)
     {
-        menu_vote();
-        return ;
+        menu_vote(vote_array, vote_size, attendance_array, attendance_size, candidate_array, candidate_size, *people_array, people_size, *uf_array, uf_size, *election_array);
+        return;
     }
 
 
@@ -68,7 +72,7 @@ void front_to_backend(uf **uf_array, int *uf_size, people **people_array, int *p
     int i;
     if (option == Create_Data)
     {
-        system("cls");
+        clean_stdin();
         if (type == Electors)
         {
             people_create(people_array, people_size);
@@ -102,7 +106,7 @@ void front_to_backend(uf **uf_array, int *uf_size, people **people_array, int *p
                     return ;
                 do
                 {
-                    system("cls");
+                    clean_stdin();
                     people_read(*people_array, i);
                     menu_continue();
                 } while (error == TRUE);
@@ -112,7 +116,9 @@ void front_to_backend(uf **uf_array, int *uf_size, people **people_array, int *p
                 i = candidate_find(*candidate_array, candidate_size, *uf_size);
                 if (i == -1)
                     return;
+                do{
                     menu_continue();
+                } while (error == TRUE);
             }
             else if (type == Electoral_College)
             {
@@ -121,7 +127,7 @@ void front_to_backend(uf **uf_array, int *uf_size, people **people_array, int *p
                     return ;
                 do
                 {
-                    system("cls");
+                    clean_stdin();
                     uf_read(*uf_array, i);
                     menu_continue();
                 } while (error == TRUE);
@@ -133,7 +139,7 @@ void front_to_backend(uf **uf_array, int *uf_size, people **people_array, int *p
                     return ;
                 do
                 {
-                    system("cls");
+                    clean_stdin();
                     election_read(*election_array, i);
                     menu_continue();
                 } while (error == TRUE);
@@ -141,13 +147,13 @@ void front_to_backend(uf **uf_array, int *uf_size, people **people_array, int *p
         }
         else
         {
-            system("cls");
+            clean_stdin();
 
             if (type == Electors)
             {
                 do
                 {
-                    system("cls");
+                    clean_stdin();
 
                     people_read_all(*people_array, people_size);
                     menu_continue();
@@ -158,7 +164,7 @@ void front_to_backend(uf **uf_array, int *uf_size, people **people_array, int *p
             {
                 do
                 {
-                    system("cls");
+                    clean_stdin();
 
                     candidate_read_all(*candidate_array, candidate_size);
                     menu_continue();
@@ -168,7 +174,7 @@ void front_to_backend(uf **uf_array, int *uf_size, people **people_array, int *p
             {
                 do
                 {
-                    system("cls");
+                    clean_stdin();
 
                     uf_read_all(*uf_array, uf_size);
                     menu_continue();
@@ -178,7 +184,7 @@ void front_to_backend(uf **uf_array, int *uf_size, people **people_array, int *p
             {
                 do
                 {
-                    system("cls");
+                    clean_stdin();
 
                     election_read_all(*election_array, election_size);
                     menu_continue();
@@ -194,15 +200,16 @@ void front_to_backend(uf **uf_array, int *uf_size, people **people_array, int *p
             i = people_find(*people_array, people_size);
             if (i == -1)
                 return ;
-            system("cls");
+            clean_stdin();
             people_read(*people_array, i);
             people_update(people_array, people_size, i);
-            menu_continue();
-
+            do{
+                menu_continue();
+            } while (error == TRUE);
         }
         else if (type == Candidate)
         {
-            system("cls");
+            clean_stdin();
             int year, code, number;
             input_int(&year,5,"Ano","qual o candidato participou", FALSE);
             input_int(&code,8,"Codigo do Estado","qual o candidato faz parte", FALSE);
@@ -211,24 +218,33 @@ void front_to_backend(uf **uf_array, int *uf_size, people **people_array, int *p
             i = candidate_find_number_year_code(*candidate_array, candidate_size, year, code, number);
             if (i == -1)
             {
-                printf("Candidato nao exite");
-                menu_continue();
+                do{
+                    clean_stdin(); //testar
+                    printf("Candidato nao exite");
+                    menu_continue();
+                } while (error == TRUE);
                 return ;
             }
-            system("cls");
+            clean_stdin();
             candidate_read(*candidate_array, i);
             candidate_update(candidate_array, candidate_size, i, *election_array, election_size, *people_array, people_size);
-            menu_continue();
+            do{
+                menu_continue();
+            } while (error == TRUE);
+
         }
         else if (type == Electoral_College)
         {
             i = uf_find(*uf_array, uf_size);
             if (i == -1)
                 return ;
-            system("cls");
+            clean_stdin();
             uf_read(*uf_array, i);
             uf_update(uf_array, uf_size, i);
-            menu_continue();
+            do{
+                menu_continue();
+            } while (error == TRUE);
+
 
         }
         else if (type == Election)
@@ -236,10 +252,13 @@ void front_to_backend(uf **uf_array, int *uf_size, people **people_array, int *p
             i = election_find_input(*election_array, election_size);
             if (i == -1)
                 return ;
-            system("cls");
+            clean_stdin();
             election_read(*election_array, i);
             election_update(election_array, election_size, i, *uf_array, uf_size);
-            menu_continue();
+            do{
+                menu_continue();
+            } while (error == TRUE);
+
         }
 
     }
@@ -252,12 +271,15 @@ void front_to_backend(uf **uf_array, int *uf_size, people **people_array, int *p
             if (i == -1)
                 return ;
             (*people_array)[i].status = 0;
-            menu_continue();
+            do{
+                menu_continue();
+            } while (error == TRUE);
+
 
         }
         else if (type == Candidate)
         {
-            system("cls");
+            clean_stdin();
             int year, code, number;
             input_int(&year,5,"Ano","qual o candidato participou", FALSE);
             input_int(&code,8,"Codigo do Estado","qual o candidato faz parte", FALSE);
@@ -266,12 +288,18 @@ void front_to_backend(uf **uf_array, int *uf_size, people **people_array, int *p
             i = candidate_find_number_year_code(*candidate_array, candidate_size, year, code, number);
             if (i == -1)
             {
-                printf("\nCandidato nao exite.\n\n");
-                menu_continue();
+                do{
+                    clean_stdin();
+                    printf("\nCandidato nao exite.\n\n");
+                    menu_continue();
+                } while (error == TRUE);
+
                 return ;
             }
             (*candidate_array)[i].status = 0;
-            menu_continue();
+            do{
+                menu_continue();
+            } while (error == TRUE);
         }
         else if (type == Electoral_College)
         {
@@ -279,7 +307,9 @@ void front_to_backend(uf **uf_array, int *uf_size, people **people_array, int *p
             if (i == -1)
                 return ;
             (*uf_array)[i].status = 0;
-            menu_continue();
+            do{
+                menu_continue();
+            } while (error == TRUE);
         }
         else if (type == Election)
         {
@@ -287,7 +317,9 @@ void front_to_backend(uf **uf_array, int *uf_size, people **people_array, int *p
             if (i == -1)
                 return ;
             (*election_array)[i].status = 0;
-            menu_continue();
+            do{
+                menu_continue();
+            } while (error == TRUE);
         }
 
     }
@@ -296,12 +328,12 @@ void front_to_backend(uf **uf_array, int *uf_size, people **people_array, int *p
 
 
 //START
-void menu_start(uf **uf_array, int *uf_size, people **people_array, int *people_size, election **election_array, int *election_size, candidate **candidate_array, int *candidate_size)
+void menu_start(uf **uf_array, int *uf_size, people **people_array, int *people_size, election **election_array, int *election_size, candidate **candidate_array, int *candidate_size, attendance **attendance_array, int *attendance_size, vote **vote_array, int *vote_size)
 {
     do
     {
         //for menu things
-        system("cls");
+        clean_stdin();
         ui_start();
 
         input_menu_checker();
@@ -313,11 +345,12 @@ void menu_start(uf **uf_array, int *uf_size, people **people_array, int *people_
         if (input_menu.integer == 2)
             break;
 
-        front_to_backend(uf_array, uf_size, people_array, people_size, election_array, election_size, candidate_array, candidate_size);
+        front_to_backend(uf_array, uf_size, people_array, people_size, election_array, election_size, candidate_array, candidate_size, attendance_array, attendance_size, vote_array, vote_size);
+
 
     } while (TRUE);
 
-    system("cls");
+    clean_stdin();
     printf ("\nObrigado por utilizar Daniel's data bank, Boa noite.\n");
 }
 
@@ -339,7 +372,7 @@ var_options menu_process()
     var_options temp_option = Exit_options;
     do{
 
-            system("cls");
+            clean_stdin();
 
             ui_process();
             input_menu_checker();
@@ -396,22 +429,28 @@ void ui_process()
 
 //VOTAR
 
-void menu_vote()
+void menu_vote(vote **vote_array, int *vote_size, attendance **attendance_array, int *attendance_size, candidate **candidate_array, int *candidate_size, people *people_array, int *people_size, uf *uf_array, int *uf_size, election *election_array)
 {
     do{
-            system("cls");
 
-            ui_vote();
-            input_menu_checker();
+        clean_stdin();
 
 
+        ui_vote();
+        input_menu_checker();
+
+
+        clean_stdin();
         switch (input_menu.integer)
         {
             case 1:
-                printf("APERTOU 1");
+                vote_create(vote_array, vote_size, attendance_array, attendance_size, *candidate_array, candidate_size, people_array, people_size, election_array);
+                //do{
+                    menu_continue();
+                //} while (error == TRUE);
                 break;
             case 2:
-                printf("APERTOU 2");
+                vote_results(vote_array, vote_size, attendance_array, attendance_size, uf_array, *uf_size);
                 break;
             case 3:
                 break;
@@ -428,10 +467,105 @@ void ui_vote()
 {
     printf("\n==================Votar==================\n\n");
 
-    printf("\tEntrar em seu perfil com: \n");
-    printf("\t1.CPF: \n");
-    printf("\t2.Titulo de Eleitor: \n");
+    printf("\tVamos: \n");
+    printf("\t1.Comecar: \n");
+    printf("\t2.Ver Resultados: \n");
     printf("\t3.Voltar\n");
+
+    printf("\n==================Votar==================\n");
+}
+
+void vote_results(vote **vote_array, int *vote_size, attendance **attendance_array, int *attendance_size, uf *uf_array, int uf_size)
+{
+    int year = 0;
+    int code = 0;
+    int i;
+    do{
+        clean_stdin();
+
+
+        ui_vote_results();
+        input_menu_checker();
+
+
+        clean_stdin();
+
+        switch (input_menu.integer)
+        {
+            case 1:
+                input_int(&year,5,"Ano","Candidato", FALSE);
+                input_int(&code,8,"codigo da UF","Candidato", FALSE);
+
+                i = vote_find_and_read_for_year_number(*vote_array, vote_size, year, code);
+
+                if (i == -1)
+                    printf("\n\nNINGUEM VOTOU AINDA\n\n");
+
+                do{
+                    menu_continue();
+                } while (error == TRUE);
+
+                break;
+            case 2:
+                input_int(&year,5,"Ano","Candidato", FALSE);
+
+                i = vote_find_and_read_for_year(*vote_array, vote_size, year, uf_size);
+
+                if (i == -1)
+                    printf("\n\nNINGUEM VOTOU AINDA\n\n");
+
+                do{
+                    menu_continue();
+                } while (error == TRUE);
+
+                break;
+            case 3:
+                input_int(&year,5,"Ano","Candidato", FALSE);
+                input_int(&code,8,"codigo da UF","Candidato", FALSE);
+
+                i = attendance_votes_for_uf_year(*attendance_array, attendance_size, year, code, uf_array, uf_size);
+
+                if (i == -1)
+                    printf("\n\nNINGUEM VOTOU AINDA\n\n");
+
+                do{
+                    menu_continue();
+                } while (error == TRUE);
+
+                break;
+            case 4:
+                input_int(&year,5,"Ano","Candidato", FALSE);
+
+                i = attendance_find_and_read_for_year(*attendance_array, attendance_size, year, uf_size);
+
+                if (i == -1)
+                    printf("\n\nNINGUEM VOTOU AINDA\n\n");
+
+                do{
+                    menu_continue();
+                } while (error == TRUE);
+                break;
+            case 5:
+                break;
+            default:
+                error = TRUE;
+        }
+
+
+    }   while (error == TRUE);
+}
+
+
+void ui_vote_results()
+{
+    printf("\n==================Votar==================\n\n");
+
+    printf("\tMostrar: \n");
+    printf("\t1.Votos com UF e Ano: \n");
+    printf("\t2.Votos com Ano: \n");
+    printf("\t3.Quantidade de votos com Ano e UF: \n");
+    printf("\t4.Comparecimento com Ano: \n");
+    printf("\t5.Voltar\n");
 
     printf("\n==================Votar==================\n");
 }
@@ -446,7 +580,7 @@ var_types menu_data_types(const var_options *ptr_option)
     var_types tem_type = Exit_type;
     do{
 
-            system("cls");
+            clean_stdin();
 
             char str[12];
             ui_string_choice(str, ptr_option);
@@ -550,7 +684,7 @@ int uf_find(uf *uf_array, const int *uf_size)
 
     do{
 
-        system("cls");
+        clean_stdin();
 
         ui_find_uf();
         if (i == -1)
@@ -562,12 +696,12 @@ int uf_find(uf *uf_array, const int *uf_size)
 
         input_menu_checker();
 
-        system("cls");
+        clean_stdin();
         char str[30];
         switch (input_menu.integer)
         {
             case 1:
-                input_int(&i,4,"codigo","UF", FALSE);
+                input_int(&i,8,"codigo","UF", FALSE);
                 i = uf_find_code(uf_array, uf_size, i);
                 break;
                 /*
@@ -617,7 +751,7 @@ int people_find(people *people_array, const int *people_size)
 
     do{
 
-        system("cls");
+        clean_stdin();
 
         ui_find_people();
         if (i == -1)
@@ -629,7 +763,7 @@ int people_find(people *people_array, const int *people_size)
 
         input_menu_checker();
 
-        system("cls");
+        clean_stdin();
         char str[15];
         switch (input_menu.integer)
         {
@@ -663,7 +797,7 @@ int people_find(people *people_array, const int *people_size)
 int election_find_input(election *election_array, const int *election_size)
 {
     int year, uf_code;
-    system("cls");
+    clean_stdin();
 
     input_int(&year,5,"ano","eleicao", FALSE);
     input_int(&uf_code,8,"codigo","UF", FALSE);
@@ -672,8 +806,11 @@ int election_find_input(election *election_array, const int *election_size)
 
     if (i == -1)
     {
-        printf("\n\n-Eleicao NAO ENCONTRADA-\n\n");
-        menu_continue();
+        do{
+            clean_stdin();
+            printf("\n\n-Eleicao NAO ENCONTRADA-\n\n");
+            menu_continue();
+        } while (error == TRUE);
     }
     return i;
 
@@ -699,7 +836,7 @@ int candidate_find(candidate *candidate_array, int *candidate_size, int uf_size)
     int i = 0;
     do{
 
-        system("cls");
+        clean_stdin();
 
         ui_find_candidate();
         if (i == -1)
@@ -711,7 +848,7 @@ int candidate_find(candidate *candidate_array, int *candidate_size, int uf_size)
 
         input_menu_checker();
 
-        system("cls");
+        clean_stdin();
         int year;
         int uf_code;
         switch (input_menu.integer)
@@ -768,22 +905,22 @@ void ui_read_options()
 int menu_read_options()
 {
     do{
-    system("cls");
-    ui_read_options();
-    input_menu_checker();
-    switch (input_menu.integer)
-    {
-        case 1:
-            return 1;
-        case 2:
-            return 2;
-        case 3:
-            return -1;
-        default:
-            error = TRUE;
-            break;
+        clean_stdin();
+        ui_read_options();
+        input_menu_checker();
+        switch (input_menu.integer)
+        {
+            case 1:
+                return 1;
+            case 2:
+                return 2;
+            case 3:
+                return -1;
+            default:
+                error = TRUE;
+                break;
 
-    }
+        }
 
     } while (TRUE);
 

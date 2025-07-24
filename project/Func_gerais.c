@@ -3,10 +3,10 @@
 //
 
 #include "Func_gerais.h"
-#include <stdio.h>
-#include <stdlib.h>
 
-//#include "uf1.h"
+
+// #include <stdio.h>
+// #include <stdlib.h>
 
 
 FILE *ptr_file(const char path[])
@@ -52,6 +52,9 @@ void input_int(int *p ,const int _size ,const char var_name[] ,const char var_ty
         printf ("\nDigite o %s do %s: ", var_name, var_type);
         clean(stdin);
         gets (str);
+        //scanf("%s",str);
+        //getchar();
+        clean(stdin);
 
         flag = verify_input(str , _size, blank);
 
@@ -94,6 +97,9 @@ void input_char(char *p ,const int _size , const char var_name[] ,const char var
         printf ("\nDigite o %s do %s: ", var_name, var_type);
         clean(stdin);
         gets (str);
+        //scanf("%s",str);
+        //getchar();
+        clean(stdin);
 
         flag = verify_input(str , _size, blank);
 
@@ -155,3 +161,13 @@ int just_numbers(bool blank, char str[], int start, int end)
     return -1;
 }
 
+void clean_stdin()
+{
+    clean(stdin);
+    // printf("\n\nERA PRA EXCLUIR MAS NAO FUNCIONA\n\n");
+    #ifdef unix
+        system ("clear");
+    #else
+        system ("cls");
+    #endif
+}

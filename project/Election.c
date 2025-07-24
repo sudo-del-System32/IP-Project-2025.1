@@ -5,11 +5,11 @@
 #include "Election.h"
 
 
-#include "Func_gerais.h"
-#include "uf1.h"
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+// #include "Func_gerais.h"
+// #include "uf1.h"
+// #include <stdio.h>
+// #include <stdlib.h>
+// #include <string.h>
 
 
 void election_start(election **election_array, int *election_size, uf *uf_array)
@@ -166,7 +166,6 @@ int election_find(const election *election_array, const int *election_size, int 
 
     for (i = 0; i < *election_size; i++)
     {
-
         if (election_array[i].status == 0)
             continue;
         if (election_array[i].year == year && election_array[i].uf_code == code)

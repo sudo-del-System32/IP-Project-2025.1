@@ -2,11 +2,11 @@
 // Created by franc on 17/07/2025.
 //
 
-#include "Func_gerais.h"
 #include "people.h"
 
-#include <stdio.h>
-#include <stdlib.h>
+// #include "Func_gerais.h"
+// #include <stdio.h>
+// #include <stdlib.h>
 
 
 void people_start(people **people_array, int *people_size)
@@ -162,7 +162,6 @@ void people_read_all(people *people_array, const int *people_size)
 
 int people_find_cpf(const people *people_array, const int *people_size, const char cpf[])
 {
-
     for (int i = 0; i < *people_size; i++)
     {
 #ifdef debug
@@ -174,6 +173,7 @@ int people_find_cpf(const people *people_array, const int *people_size, const ch
         if (strcmp(cpf,people_array[i].cpf) == 0)
             return i;
     }
+
 
     return -1;
 }
@@ -303,6 +303,8 @@ void people_update(people **people_array, const int *people_size, const int i)
         printf("state_original: %d\n", state_original);
 #endif
 
+        if (str[0] == '\0' || str[0] == '\n')
+            state_original = -1;
 
         if (state_original != -1)
         {

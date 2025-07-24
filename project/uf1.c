@@ -2,10 +2,12 @@
 // Created by franc on 09/07/2025.
 //
 
-#include "Func_gerais.h"
 #include "uf1.h"
-#include <stdio.h>
-#include <stdlib.h>
+
+
+// #include "Func_gerais.h"
+// #include <stdio.h>
+// #include <stdlib.h>
 
 
 void uf_start(uf **uf_array, int *uf_size)
