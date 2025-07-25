@@ -3,7 +3,11 @@
 //
 
 #include "people.h"
+#include "Func_gerais.h"
 
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
 
 void people_start(people **people_array, int *people_size)

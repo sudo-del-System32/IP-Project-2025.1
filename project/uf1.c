@@ -3,6 +3,11 @@
 //
 
 #include "uf1.h"
+#include "Func_gerais.h"
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
 
 void uf_start(uf **uf_array, int *uf_size)

@@ -4,6 +4,10 @@
 
 #include "Vote.h"
 
+#include "Func_gerais.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
 
 void vote_start(vote **vote_array, int *vote_size, candidate *candidate_array, election *election_array)

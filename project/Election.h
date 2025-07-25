@@ -4,6 +4,7 @@
 
 #ifndef ELECTION_H
 #define ELECTION_H
+#include "uf1.h"
 
 
 struct election

@@ -4,6 +4,8 @@
 
 #ifndef CANDIDATE_H
 #define CANDIDATE_H
+#include "people.h"
+#include "Election.h"
 
 typedef struct candidate
 {

@@ -3,7 +3,11 @@
 //
 
 #include "attendance.h"
+#include "Func_gerais.h"
 
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
 
 void attendance_start(attendance **attendance_array, int *attendance_size, election *election_array, people *people_array)

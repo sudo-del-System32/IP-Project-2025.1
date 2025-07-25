@@ -3,21 +3,20 @@
 #include <string.h>
 
 #include "Func_gerais.h"
-#include "Func_gerais.c"
+// #include "Func_gerais.c"
 #include "uf1.h"
-#include "uf1.c"
 #include "people.h"
-#include "people.c"
+// #include "people.c"
 #include "Election.h"
-#include "Election.c"
+// #include "Election.c"
 #include "Candidate.h"
-#include "Candidate.c"
+// #include "Candidate.c"
 #include "attendance.h"
-#include "attendance.c"
+// #include "attendance.c"
 #include "vote.h"
-#include "vote.c"
+// #include "vote.c"
 #include "ui1.h"
-#include "ui1.c"
+// #include "ui1.c"
 
 
 

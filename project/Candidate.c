@@ -3,7 +3,11 @@
 //
 
 #include "Candidate.h"
+#include "Func_gerais.h"
 
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
 
 

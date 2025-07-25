@@ -4,6 +4,12 @@
 
 #ifndef UI1_H
 #define UI1_H
+#include "people.h"
+#include "Election.h"
+#include "uf1.h"
+#include "candidate.h"
+#include "attendance.h"
+#include "Vote.h"
 
 typedef struct input
 {

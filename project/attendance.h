@@ -4,6 +4,8 @@
 
 #ifndef ATTENDANCE_H
 #define ATTENDANCE_H
+#include "people.h"
+#include "Election.h"
 
 typedef struct attendance
 {

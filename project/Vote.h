@@ -4,6 +4,10 @@
 
 #ifndef VOTE_H
 #define VOTE_H
+#include "people.h"
+#include "Election.h"
+#include "candidate.h"
+#include "attendance.h"
 
 typedef struct vote
 {

@@ -4,6 +4,7 @@
 
 #ifndef FUNC_GERAIS_H
 #define FUNC_GERAIS_H
+#include <stdio.h>
 
 //SE SISTEMA UNIX, MacOS ou Linux, PORFAVOR RETIRAR OS // ABAIXO E ATIVAR A DEFINIÇAO
 //#define unix
