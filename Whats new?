@@ -2,4 +2,13 @@ Overall finished.
 
 Remember, for unix users define unix in func_gerais before compiling, for it to work.
 
+func_gerais.h
+8 |  //SE SISTEMA UNIX, MacOS ou Linux, PORFAVOR RETIRAR OS // ABAIXO E ATIVAR A DEFINIÇAO
+9 |  #define unix
+
+in line 9 please define unix.
+
+Changes to compilation, now "gcc *.c -o project -std=c99"
+
+
 Thank you all.
