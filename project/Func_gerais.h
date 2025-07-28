@@ -7,7 +7,7 @@
 #include <stdio.h>
 
 //SE SISTEMA UNIX, MacOS ou Linux, PORFAVOR RETIRAR OS // ABAIXO E ATIVAR A DEFINIÇAO
-//#define unix
+#define unix
 
 //Debug mode
 //#define debug
@@ -70,6 +70,7 @@ int just_numbers(bool blank, char str[], int start, int end);
 
 void clean_stdin();
 
+void strupr(char str[]);
 
 
 #endif //FUNC_GERAIS_H

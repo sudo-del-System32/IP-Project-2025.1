@@ -7,7 +7,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
+#include <ctype.h>
 
 
 FILE *ptr_file(const char path[])
@@ -138,10 +138,10 @@ bool verify_input(char str[], const int _size, const int blank)
 void clean(FILE *_File)
 {
     #ifdef unix
-        fpurge(_File);
-    #else
-        fflush(_File);
-    #endif
+          fflush(_File);
+       #else
+       fflush(_File);
+     #endif
 }
 
 int just_numbers(bool blank, char str[], int start, int end)
@@ -172,3 +172,13 @@ void clean_stdin()
         system ("cls");
     #endif
 }
+
+
+#ifdef unix
+
+void strupr(char str[])
+{
+	for(int i = 0; i < strlen(str); i++)
+	toupper(str);
+}
+#endif
