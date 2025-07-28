@@ -6,7 +6,7 @@
 #define VOTE_H
 #include "people.h"
 #include "Election.h"
-#include "candidate.h"
+#include "Candidate.h"
 #include "attendance.h"
 
 typedef struct vote

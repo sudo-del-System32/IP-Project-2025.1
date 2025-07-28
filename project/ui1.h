@@ -7,7 +7,7 @@
 #include "people.h"
 #include "Election.h"
 #include "uf1.h"
-#include "candidate.h"
+#include "Candidate.h"
 #include "attendance.h"
 #include "Vote.h"
 
