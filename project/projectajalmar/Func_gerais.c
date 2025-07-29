@@ -167,7 +167,7 @@ int just_numbers(bool blank, char str[], int start, int end)
 void clean_stdin()
 {
     clean(stdin);
-    // printf("\n\nERA PRA EXCLUIR MAS NAO FUNCIONA\n\n");
+
     #ifdef unix
         system ("clear");
     #else
