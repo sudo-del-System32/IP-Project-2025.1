@@ -215,7 +215,7 @@ void uf_update(uf **uf_array, const int *uf_size, const int i)
     do
     {
         int num;
-        input_int(&num,4,"codigo","UF", 1);
+        input_int(&num,4,"codigo","UF", FALSE);
         state_original = uf_find_code(*uf_array, uf_size, num);
 
 #ifdef debug
@@ -239,7 +239,7 @@ void uf_update(uf **uf_array, const int *uf_size, const int i)
     char str[30];
     do
     {
-        input_char(str, 30, "nome", "UF", TRUE);
+        input_char(str, 30, "nome", "UF", FALSE);
 
 
         state_original = -1;
@@ -255,7 +255,7 @@ void uf_update(uf **uf_array, const int *uf_size, const int i)
     do
     {
 
-        input_char(str, 5, "sigla", "UF", 1);
+        input_char(str, 5, "sigla", "UF", FALSE);
         state_original = uf_find_acronym(*uf_array, uf_size, str);
 
 #ifdef debug
