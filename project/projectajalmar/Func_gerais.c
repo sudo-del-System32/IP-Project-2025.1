@@ -109,8 +109,11 @@ void input_char(char *p ,const int _size , const char var_name[] ,const char var
 
     } while (flag == FALSE);
 
-    strcpy(p,str);
-    strupr(p);
+//strcpy é strupr podiam estar dando segfault
+    for (int i = 0; i < _size; i++)
+    {
+         p[i] = toupper(str[i])
+    }
 }
 
 
