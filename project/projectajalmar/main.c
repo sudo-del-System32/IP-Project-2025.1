@@ -59,6 +59,12 @@ int main()
 	uf_array_to_file(uf_array, &uf_size);
 	people_array_to_file(people_array, &people_size);
 	free(uf_array);
+	free(people_array);
+	free(election_array);
+	free(candidate_array);
+	free(attendance_array);
+	free(vote_array);
+
 	return 0;
 }
 

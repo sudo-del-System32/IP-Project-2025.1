@@ -141,7 +141,7 @@ bool verify_input(char str[], const int _size, const int blank)
 void clean(FILE *_File)
 {
     #ifdef unix
-        fpurge(_File);
+        fflush(_File);
     #else
         fflush(_File);
     #endif
