@@ -14,6 +14,7 @@ void attendance_start(attendance **attendance_array, int *attendance_size, elect
 {
     *attendance_size = file_size("attendance.bin", sizeof(attendance));
     *attendance_array = (attendance *)malloc(*attendance_size * sizeof(attendance));
+    if (*attendance_array == NULL) exit(-1);
     attendance_file_to_array(*attendance_array, attendance_size);
     for (int i = 0; i < *attendance_size; i++)
         attendance_get_pointer(attendance_array, i, election_array, people_array);

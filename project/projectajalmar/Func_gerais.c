@@ -7,6 +7,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <ctype.h>
 
 
 
@@ -109,11 +110,8 @@ void input_char(char *p ,const int _size , const char var_name[] ,const char var
 
     } while (flag == FALSE);
 
-//strcpy é strupr podiam estar dando segfault
     for (int i = 0; i < _size; i++)
-    {
-         p[i] = toupper(str[i])
-    }
+        p[i] = toupper(str[i]);
 }
 
 
@@ -170,10 +168,10 @@ int just_numbers(bool blank, char str[], int start, int end)
 void clean_stdin()
 {
     clean(stdin);
-
+    // printf("\n\nERA PRA EXCLUIR MAS NAO FUNCIONA\n\n");
     #ifdef unix
-        system ("clear");
+        //system ("clear");
     #else
-        system ("cls");
+        //system ("cls");
     #endif
 }

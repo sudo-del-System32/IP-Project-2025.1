@@ -15,6 +15,7 @@ void candidate_start(candidate **candidate_array, int *candidate_size, election 
 {
     *candidate_size = file_size("candidate.bin", sizeof(candidate));
     *candidate_array = (candidate *)malloc(*candidate_size * sizeof(candidate));
+    if (*candidate_array == NULL) exit(-1);
     candidate_file_to_array(*candidate_array, candidate_size);
     for (int i = 0; i < *candidate_size; i++)
         candidate_get_pointer(*candidate_array, i, election_array, people_array);

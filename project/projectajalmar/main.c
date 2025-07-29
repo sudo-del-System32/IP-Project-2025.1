@@ -13,8 +13,8 @@
 // #include "Candidate.c"
 #include "attendance.h"
 // #include "attendance.c"
-#include "vote.h"
-// #include "vote.c"
+#include "Vote.h"
+// #include "Vote.c"
 #include "ui1.h"
 // #include "ui1.c"
 

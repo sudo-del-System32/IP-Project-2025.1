@@ -14,6 +14,8 @@ void vote_start(vote **vote_array, int *vote_size, candidate *candidate_array, e
 {
     *vote_size = file_size("vote.bin", sizeof(vote));
     *vote_array = (vote *)malloc(*vote_size * sizeof(vote));
+    if (*vote_array == NULL) exit(-1);
+
     vote_file_to_array(*vote_array, vote_size);
     for (int i = 0; i < *vote_size; i++)
         vote_get_pointer(vote_array, i, candidate_array, election_array);

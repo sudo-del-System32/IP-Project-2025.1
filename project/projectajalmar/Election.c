@@ -15,6 +15,8 @@ void election_start(election **election_array, int *election_size, uf *uf_array)
 {
     *election_size = file_size("election.bin", sizeof(election));
     *election_array = (election *)malloc(*election_size * sizeof(election));
+    if (*election_array == NULL) exit(-1);
+
     election_file_to_array(*election_array, election_size);
     for (int i = 0; i < *election_size; i++)
         election_get_pointer(*election_array, i, uf_array);
