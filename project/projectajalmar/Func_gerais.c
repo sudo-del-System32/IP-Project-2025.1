@@ -33,7 +33,6 @@ int file_size(const char path[],const int _sizeof_typedata)
     int _size = 0;
     FILE *f = ptr_file(path);
     fseek (f, 0, SEEK_END);
-
     _size = ftell(f) / _sizeof_typedata;
 
     fclose(f);
@@ -167,7 +166,8 @@ int just_numbers(bool blank, char str[], int start, int end)
 
 void clean_stdin()
 {
-    clean(stdin);
+    printf("\n\n++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n\n");
+    //clean(stdin);
     // printf("\n\nERA PRA EXCLUIR MAS NAO FUNCIONA\n\n");
     #ifdef unix
         //system ("clear");

@@ -13,10 +13,12 @@
 void people_start(people **people_array, int *people_size)
 {
     *people_size = file_size("people.bin", sizeof(people));
-    *people_array = (people *)malloc(*people_size * sizeof(people));
-    if (*people_array == NULL) exit(-1);
-
-    people_file_to_array(*people_array, people_size);
+    if (*people_size > 0)
+    {
+        *people_array = (people *)malloc(*people_size * sizeof(people));
+        if (*people_array == NULL) exit(-1);
+        people_file_to_array(*people_array, people_size);
+    }
 }
 
 

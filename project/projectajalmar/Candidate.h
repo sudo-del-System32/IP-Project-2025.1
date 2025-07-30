@@ -19,7 +19,7 @@ typedef struct candidate
     int status;
 }candidate;
 
-void candidate_start(candidate **candidate_array, int *candidate_size, election *election_array, people *people_array);
+void candidate_start(candidate **candidate_array, int *candidate_size, election *election_array, people *people_array, int people_size, int election_size);
 
 
 void candidate_array_expander(candidate **candidate_array, int *candidate_size);
@@ -55,7 +55,7 @@ int candidate_validation(const candidate *candidate_array, const int *candidate_
 void candidate_update(candidate **candidate_array, const int *candidate_size, const int i, election *election_array, int *election_size, people *people_array, int *people_size);
 
 
-void candidate_get_pointer(candidate *candidate_array, int i, election *ptr_election, people *ptr_people);
+void candidate_get_pointer(candidate *candidate_array, int i, election *ptr_election, people *ptr_people, int people_size, int election_size);
 
 
 void candidate_get_locale(candidate *candidate_array, int i, election *election_array, people *people_array);

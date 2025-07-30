@@ -13,14 +13,15 @@
 void vote_start(vote **vote_array, int *vote_size, candidate *candidate_array, election *election_array)
 {
     *vote_size = file_size("vote.bin", sizeof(vote));
-    *vote_array = (vote *)malloc(*vote_size * sizeof(vote));
-    if (*vote_array == NULL) exit(-1);
-
-    vote_file_to_array(*vote_array, vote_size);
-    for (int i = 0; i < *vote_size; i++)
-        vote_get_pointer(vote_array, i, candidate_array, election_array);
+    if (*vote_size > 0)
+    {
+        *vote_array = (vote *)malloc(*vote_size * sizeof(vote));
+        if (*vote_array == NULL) exit(-1);
+        vote_file_to_array(*vote_array, vote_size);
+        for (int i = 0; i < *vote_size; i++)
+            vote_get_pointer(vote_array, i, candidate_array, election_array);
+    }
 }
-
 
 
 void vote_array_expander(vote **vote_array, int *vote_size)
@@ -99,7 +100,7 @@ int vote_array_empty_space_finder(const vote *vote_array, const int *vote_size)
 }
 
 
-void vote_create(vote **vote_array, int *vote_size, attendance **attendance_array, int *attendance_size, candidate *candidate_array, int *candidate_size, people *people_array, const int *people_size, election *election_array)
+void vote_create(vote **vote_array, int *vote_size, attendance **attendance_array, int *attendance_size, candidate *candidate_array, int *candidate_size, people *people_array, const int *people_size, election *election_array, int election_size)
 {
 
     int i = vote_array_empty_space_finder(*vote_array ,vote_size);
@@ -118,7 +119,7 @@ void vote_create(vote **vote_array, int *vote_size, attendance **attendance_arra
         }
     }
     attendance_create(attendance_array, attendance_size);
-    vote_update(vote_array, vote_size, attendance_array, i, candidate_array, candidate_size, people_array, people_size, election_array);
+    vote_update(vote_array, vote_size, attendance_array, i, candidate_array, candidate_size, people_array, people_size, election_array, election_size);
 }
 
 
@@ -200,7 +201,7 @@ int attendance_find_cpf(attendance *attendance_array, int *attendance_size, char
 }
 
 
-void vote_update(vote **vote_array, const int *vote_size, attendance **attendance_array, const int i, candidate *candidate_array, int *candidate_size, people *people_array, const int *people_size, election *election_array)
+void vote_update(vote **vote_array, const int *vote_size, attendance **attendance_array, const int i, candidate *candidate_array, int *candidate_size, people *people_array, const int *people_size, election *election_array, int election_size)
 {
     int state_original = 0;
     char str[15];
@@ -346,7 +347,7 @@ void vote_update(vote **vote_array, const int *vote_size, attendance **attendanc
     strcpy((*vote_array)[i].time_day, str);
 
     vote_get_pointer(vote_array, i, candidate_array, election_array);
-    attendance_get_pointer(attendance_array, i, election_array, people_array);
+    attendance_get_pointer(attendance_array, i, election_array, people_array, *people_size, election_size);
 
     (*vote_array)[i].status = -1;
     (*attendance_array)[i].status = -1;
@@ -355,6 +356,11 @@ void vote_update(vote **vote_array, const int *vote_size, attendance **attendanc
 
 void vote_get_pointer(vote **vote_array, int i, candidate *candidate_array, election *election_array)
 {
+    if ((*vote_array)[i].status == 0 || candidate_array[(*vote_array)[i].candidate_locale].status == 0 || election_array[(*vote_array)[i].election_locale].status == 0)
+    {
+        (*vote_array)[i].status = 0;
+        return;
+    }
     (*vote_array)[i].ptr_candidate = &candidate_array[(*vote_array)[i].candidate_locale];
     (*vote_array)[i].election_locale = candidate_array[(*vote_array)[i].candidate_locale].election_locale;
     (*vote_array)[i].ptr_election = &election_array[(*vote_array)[i].election_locale];
@@ -364,6 +370,8 @@ void vote_get_pointer(vote **vote_array, int i, candidate *candidate_array, elec
 
 void vote_get_locale(vote *vote_array, int i, candidate *candidate_array, election *election_array)
 {
+    if (vote_array[i].status == 0)
+        return;
     vote_array[i].candidate_locale = (vote_array[i].ptr_candidate - candidate_array)/sizeof(candidate);
     vote_array[i].election_locale = (vote_array[i].ptr_election - election_array)/sizeof(election);
 }

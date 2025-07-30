@@ -10,16 +10,18 @@
 #include <string.h>
 
 
-void attendance_start(attendance **attendance_array, int *attendance_size, election *election_array, people *people_array)
+void attendance_start(attendance **attendance_array, int *attendance_size, election *election_array, people *people_array, int people_size, int election_size)
 {
     *attendance_size = file_size("attendance.bin", sizeof(attendance));
-    *attendance_array = (attendance *)malloc(*attendance_size * sizeof(attendance));
-    if (*attendance_array == NULL) exit(-1);
-    attendance_file_to_array(*attendance_array, attendance_size);
-    for (int i = 0; i < *attendance_size; i++)
-        attendance_get_pointer(attendance_array, i, election_array, people_array);
+    if (*attendance_size > 0)
+    {
+        *attendance_array = (attendance *)malloc(*attendance_size * sizeof(attendance));
+        if (*attendance_array == NULL) exit(-1);
+        attendance_file_to_array(*attendance_array, attendance_size);
+        for (int i = 0; i < *attendance_size; i++)
+            attendance_get_pointer(attendance_array, i, election_array, people_array, people_size, election_size);
+    }
 }
-
 
 
 void attendance_array_expander(attendance **attendance_array, int *attendance_size)
@@ -154,8 +156,14 @@ void attendance_read_all(attendance *attendance_array, const int *attendance_siz
 }
 
 
-void attendance_get_pointer(attendance **attendance_array, int i, election *election_array, people *people_array)
+void attendance_get_pointer(attendance **attendance_array, int i, election *election_array, people *people_array, int people_size, int election_size)
 {
+    if ((*attendance_array)[i].status == 0 || (*attendance_array)[i].people_locale >= people_size || (*attendance_array)[i].election_locale>= election_size || people_array[(*attendance_array)[i].people_locale].status == 0 || election_array[(*attendance_array)[i].election_locale].status == 0)
+    {
+        (*attendance_array)[i].status = 0;
+        return;
+    }
+
     (*attendance_array)[i].ptr_people = &people_array[(*attendance_array)[i].people_locale];
 
     strcpy((*attendance_array)[i].cpf, people_array[(*attendance_array)[i].people_locale].cpf);
@@ -173,6 +181,8 @@ void attendance_get_pointer(attendance **attendance_array, int i, election *elec
 
 void attendance_get_locale(attendance *attendance_array, int i, election *election_array, people *people_array)
 {
+    if (attendance_array[i].status == 0)
+        return;
     attendance_array[i].people_locale = (attendance_array[i].ptr_people - people_array)/sizeof(people);
     attendance_array[i].election_locale = (attendance_array[i].ptr_election - election_array)/sizeof(election);
 }

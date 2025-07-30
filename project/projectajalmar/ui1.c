@@ -56,7 +56,7 @@ void front_to_backend(uf **uf_array, int *uf_size, people **people_array, int *p
 
     if (option == Vote)
     {
-        menu_vote(vote_array, vote_size, attendance_array, attendance_size, candidate_array, candidate_size, *people_array, people_size, *uf_array, uf_size, *election_array);
+        menu_vote(vote_array, vote_size, attendance_array, attendance_size, candidate_array, candidate_size, *people_array, people_size, *uf_array, uf_size, *election_array, *election_size);
         return;
     }
 
@@ -83,7 +83,7 @@ void front_to_backend(uf **uf_array, int *uf_size, people **people_array, int *p
         {
             election_create(election_array, election_size, *uf_array, uf_size);
         }
-        get_pointer_all(*uf_array, *people_array, *election_array, *election_size, *candidate_array, *candidate_size, vote_array, *vote_size, attendance_array, *attendance_size);
+        get_pointer_all(*uf_array, *people_array, *people_size, *election_array, *election_size, *candidate_array, *candidate_size, vote_array, *vote_size, attendance_array, *attendance_size);
     }
     //Read
     else if (option == Read_Data)
@@ -315,6 +315,8 @@ void front_to_backend(uf **uf_array, int *uf_size, people **people_array, int *p
                 menu_continue();
             } while (error == TRUE);
         }
+        get_pointer_all(*uf_array, *people_array, *people_size, *election_array, *election_size, *candidate_array, *candidate_size, vote_array, *vote_size, attendance_array, *attendance_size);
+
 
     }
 
@@ -423,7 +425,7 @@ void ui_process()
 
 //VOTAR
 
-void menu_vote(vote **vote_array, int *vote_size, attendance **attendance_array, int *attendance_size, candidate **candidate_array, int *candidate_size, people *people_array, int *people_size, uf *uf_array, int *uf_size, election *election_array)
+void menu_vote(vote **vote_array, int *vote_size, attendance **attendance_array, int *attendance_size, candidate **candidate_array, int *candidate_size, people *people_array, int *people_size, uf *uf_array, int *uf_size, election *election_array, int election_size)
 {
     do{
 
@@ -438,7 +440,7 @@ void menu_vote(vote **vote_array, int *vote_size, attendance **attendance_array,
         switch (input_menu.integer)
         {
             case 1:
-                vote_create(vote_array, vote_size, attendance_array, attendance_size, *candidate_array, candidate_size, people_array, people_size, election_array);
+                vote_create(vote_array, vote_size, attendance_array, attendance_size, *candidate_array, candidate_size, people_array, people_size, election_array, election_size);
                 //do{
                     menu_continue();
                 //} while (error == TRUE);
@@ -921,17 +923,22 @@ int menu_read_options()
 }
 
 
-void get_pointer_all(uf *uf_array, people *people_array, election *election_array, int election_size, candidate *candidate_array, int candidate_size, vote **vote_array, int vote_size, attendance **attendance_array, int attendance_size)
+void get_pointer_all(uf *uf_array, people *people_array, int people_size, election *election_array, int election_size, candidate *candidate_array, int candidate_size, vote **vote_array, int vote_size, attendance **attendance_array, int attendance_size)
 {
     for (int i = 0; i < election_size; i++)
-    election_get_pointer(election_array, i, uf_array);
-
+    {
+        election_get_pointer(election_array, i, uf_array);
+    }
     for (int i = 0; i < candidate_size; i++)
-    candidate_get_pointer(candidate_array, i, election_array, people_array);
-
+    {
+        candidate_get_pointer(candidate_array, i, election_array, people_array, people_size, election_size);
+    }
     for (int i = 0; i < vote_size; i++)
-    vote_get_pointer(vote_array, i, candidate_array, election_array);
-
+    {
+        vote_get_pointer(vote_array, i, candidate_array, election_array);
+    }
     for (int i = 0; i < attendance_size; i++)
-    attendance_get_pointer(attendance_array, i, election_array, people_array);
+    {
+        attendance_get_pointer(attendance_array, i, election_array, people_array, people_size, election_size);
+    }
 }

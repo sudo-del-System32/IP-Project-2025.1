@@ -13,9 +13,12 @@
 void uf_start(uf **uf_array, int *uf_size)
 {
     *uf_size = file_size("uf1.bin", sizeof(uf));
-    *uf_array = (uf *)malloc(*uf_size * sizeof(uf));
-    if (*uf_array == NULL) exit(-1);
-    uf_file_to_array(*uf_array, uf_size);
+    if (*uf_size >0)
+    {
+        *uf_array = (uf *)malloc(*uf_size * sizeof(uf));
+        if (*uf_array == NULL) exit(-1);
+        uf_file_to_array(*uf_array, uf_size);
+    }
 }
 
 

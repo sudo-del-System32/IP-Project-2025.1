@@ -23,7 +23,7 @@ typedef struct attendance
 
 
 
-void attendance_start(attendance **attendance_array, int *attendance_size, election *election_array, people *people_array);
+void attendance_start(attendance **attendance_array, int *attendance_size, election *election_array, people *people_array, int people_size, int election_size);
 
 void attendance_array_expander(attendance **attendance_array, int *attendance_size);
 
@@ -39,7 +39,7 @@ void attendance_read(attendance *attendance_array, const int i);
 
 void attendance_read_all(attendance *attendance_array, const int *attendance_size);
 
-void attendance_get_pointer(attendance **attendance_array, int i, election *election_array, people *people_array);
+void attendance_get_pointer(attendance **attendance_array, int i, election *election_array, people *people_array, int people_size, int election_size);
 
 void attendance_get_locale(attendance *attendance_array, int i, election *election_array, people *people_array);
 

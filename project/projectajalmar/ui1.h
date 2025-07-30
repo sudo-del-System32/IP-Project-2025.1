@@ -80,8 +80,7 @@ void ui_process();
 /*
  ** Utilizado para escolha das opções do menu de voto.
  */
-void menu_vote(vote **vote_array, int *vote_size, attendance **attendance_array, int *attendance_size, candidate **candidate_array, int *candidate_size, people *people_array, int *people_size, uf *uf_array, int *uf_size, election *election_array);
-
+void menu_vote(vote **vote_array, int *vote_size, attendance **attendance_array, int *attendance_size, candidate **candidate_array, int *candidate_size, people *people_array, int *people_size, uf *uf_array, int *uf_size, election *election_array, int election_size);
 
 /*
  ** Utilizado para o output das opções do menu de voto.
@@ -138,6 +137,6 @@ void ui_read_options();
 /**/
 int menu_read_options();
 
-void get_pointer_all(uf *uf_array, people *people_array, election *election_array, int election_size, candidate *candidate_array, int candidate_size, vote **vote_array, int vote_size, attendance **attendance_array, int attendance_size);
+void get_pointer_all(uf *uf_array, people *people_array, int people_size, election *election_array, int election_size, candidate *candidate_array, int candidate_size, vote **vote_array, int vote_size, attendance **attendance_array, int attendance_size);
 
 #endif //UI1_H

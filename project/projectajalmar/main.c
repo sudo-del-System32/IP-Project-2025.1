@@ -25,31 +25,32 @@ int main()
 {
 	//UF
 	int uf_size;
-	uf *uf_array;
+	uf *uf_array = NULL;
 	uf_start(&uf_array, &uf_size);
 	//People
 	int people_size;
-	people *people_array;
+	people *people_array = NULL;
 	people_start(&people_array, &people_size);
 	//Election
 	int election_size;
-	election *election_array;
+	election *election_array = NULL;
 	election_start(&election_array, &election_size, uf_array);
 	//Candidate
-	candidate *candidate_array;
 	int candidate_size;
-	candidate_start(&candidate_array, &candidate_size, election_array, people_array);
+	candidate *candidate_array = NULL;
+	candidate_start(&candidate_array, &candidate_size, election_array, people_array, people_size, election_size);
 	//attendance
-	attendance *attendance_array;
 	int attendance_size;
-	attendance_start(&attendance_array, &attendance_size, election_array, people_array);
+	attendance *attendance_array = NULL;
+	attendance_start(&attendance_array, &attendance_size, election_array, people_array, people_size, election_size);
 	//vote
-	vote *vote_array;
 	int vote_size;
+	vote *vote_array = NULL;
 	vote_start(&vote_array, &vote_size, candidate_array, election_array);
 
 
-	menu_start(&uf_array, &uf_size, &people_array, &people_size, &election_array, &election_size, &candidate_array, &candidate_size, &attendance_array, &attendance_size, &vote_array, &vote_size);
+	menu_start(&uf_array, &uf_size, &people_array, &people_size, &election_array, &election_size, &candidate_array,
+	           &candidate_size, &attendance_array, &attendance_size, &vote_array, &vote_size);
 
 
 	attendance_array_to_file(attendance_array, &attendance_size);

@@ -14,14 +14,16 @@
 void election_start(election **election_array, int *election_size, uf *uf_array)
 {
     *election_size = file_size("election.bin", sizeof(election));
-    *election_array = (election *)malloc(*election_size * sizeof(election));
-    if (*election_array == NULL) exit(-1);
+    if (*election_size > 0)
+    {
+        *election_array = (election *)malloc(*election_size * sizeof(election));
+        if (*election_array == NULL) exit(-1);
 
-    election_file_to_array(*election_array, election_size);
-    for (int i = 0; i < *election_size; i++)
-        election_get_pointer(*election_array, i, uf_array);
+        election_file_to_array(*election_array, election_size);
+        for (int i = 0; i < *election_size; i++)
+            election_get_pointer(*election_array, i, uf_array);
+    }
 }
-
 
 
 void election_array_expander(election **election_array, int *election_size)
@@ -236,10 +238,21 @@ void election_update(election **election_array, const int *election_size, const 
 
 void election_get_pointer(election *election_array, int i, uf *uf_array)
 {
+    if (election_array[i].status == 0 || uf_array[election_array[i].uf_code - 1].status == 0)
+    {
+        election_array[i].status = 0;
+        return;
+    }
+
     election_array[i].ptr_state = &uf_array[election_array[i].uf_code - 1];
 }
 
 void election_get_uf_code(election *election_array, int i)
 {
+    if (election_array[i].status == 0)
+    {
+        election_array[i].uf_code = 0;
+        return;
+    }
     election_array[i].uf_code = election_array[i].ptr_state->code;
 }
